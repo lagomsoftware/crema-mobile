@@ -1,13 +1,12 @@
 {
   "expo": {
-    "scheme": "acme",
+    "scheme": "crema",
     "web": {
       "bundler": "metro"
     },
     "name": "crema",
     "slug": "crema",
-    "plugins": [
-      "expo-router"
-    ]
+    "plugins": ["expo-router"],
+    "userInterfaceStyle": "automatic"
   }
 }
