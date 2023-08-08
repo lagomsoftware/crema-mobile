@@ -5,6 +5,9 @@
       "bundler": "metro"
     },
     "name": "crema",
-    "slug": "crema"
+    "slug": "crema",
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
