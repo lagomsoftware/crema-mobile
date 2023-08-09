@@ -4,6 +4,11 @@
     "web": {
       "bundler": "metro"
     },
+    "ios": {
+      "config": {
+        "usesNonExemptEncryption": false
+      }
+    },
     "name": "crema",
     "slug": "crema",
     "plugins": ["expo-router"],

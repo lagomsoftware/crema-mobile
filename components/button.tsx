@@ -1,20 +1,25 @@
-import { impactAsync } from "expo-haptics";
-import { SquircleView } from "react-native-figma-squircle";
-import { LucideIcon } from "lucide-react-native";
+import classNames from "../lib/classNames";
 import {
+  ActivityIndicator,
   Text,
   TouchableOpacity,
   TouchableOpacityProps,
+  View,
   useColorScheme,
 } from "react-native";
+import { LucideIcon } from "lucide-react-native";
+import { SquircleView } from "react-native-figma-squircle";
+import { impactAsync } from "expo-haptics";
 
 interface ButtonProps extends TouchableOpacityProps {
   icon?: LucideIcon;
+  loading?: boolean;
 }
 
 export default function Button({
   icon: Icon,
   children,
+  loading,
   style,
   ...rest
 }: ButtonProps) {
@@ -33,19 +38,30 @@ export default function Button({
       }}
     >
       <SquircleView
-        className="flex-row items-center justify-center px-6 py-3.5 space-x-2"
+        className={classNames(
+          "flex-row items-center justify-between px-6 py-3.5 space-x-2",
+          (loading || rest.disabled) && "opacity-50",
+        )}
         squircleParams={{
           fillColor: colorScheme === "light" ? "#1c1917" : "white",
           cornerSmoothing: 0.7,
           cornerRadius: 30,
         }}
       >
-        <Text className="text-base font-medium text-white dark:text-black">
+        <View className={Icon ? "w-[22]" : loading ? "w-[22]" : undefined} />
+
+        <Text className="text-lg font-medium text-white dark:text-black">
           {children}
         </Text>
 
-        {Icon && (
-          <Icon size={20} color={colorScheme === "light" ? "white" : "black"} />
+        {loading ? (
+          <ActivityIndicator
+            color={colorScheme === "light" ? "white" : "black"}
+          />
+        ) : Icon ? (
+          <Icon size={22} color={colorScheme === "light" ? "white" : "black"} />
+        ) : (
+          <View />
         )}
       </SquircleView>
     </TouchableOpacity>

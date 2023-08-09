@@ -1,20 +1,37 @@
-import Button from "../components/button";
-import Input from "../components/input";
-import { ArrowRight } from "lucide-react-native";
-import { Formik } from "formik";
+import AuthContext from "../../lib/context/auth";
+import Button from "../../components/button";
+import Input from "../../components/input";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   Text,
   View,
 } from "react-native";
-import { Link } from "expo-router";
+import { ArrowRight } from "lucide-react-native";
+import { Formik } from "formik";
 import { Image } from "expo-image";
+import { Link } from "expo-router";
+import { trpc } from "../../lib/trpc";
+import { useContext } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export default function Page() {
+export default function Login() {
   const insets = useSafeAreaInsets();
+
+  // Global state
+  const { token, setToken, loading } = useContext(AuthContext);
+
+  // Server state
+  const { mutateAsync } = trpc.auth.login.useMutation({
+    onSuccess: (data) => {
+      setToken(data.token);
+    },
+    onError: (e) => {
+      Alert.alert(e.message);
+    },
+  });
 
   return (
     <KeyboardAvoidingView
@@ -24,23 +41,28 @@ export default function Page() {
     >
       <ScrollView>
         <Formik
-          initialValues={{ email: "", password: "" }}
-          onSubmit={console.log}
+          initialValues={{
+            email: "albin.groen@gmail.com",
+            password: "Opelsaab14",
+          }}
+          onSubmit={(values) => {
+            mutateAsync(values);
+          }}
         >
-          {({ handleChange, handleSubmit, values }) => (
+          {({ handleChange, handleSubmit, values, isSubmitting }) => (
             <View className="p-5 pt-16">
               <Image
-                className="h-16"
-                source={require("../assets/icon.png")}
+                className="h-14"
+                source={require("../../assets/icon.png")}
                 contentFit="contain"
                 contentPosition="left"
               />
 
-              <Text className="mt-8 text-3xl font-semibold dark:text-white">
+              <Text className="mt-8 text-4xl font-medium dark:text-white">
                 Welcome to Crema
               </Text>
 
-              <View className="mt-8">
+              <View className="mt-6">
                 <Input
                   onChangeText={handleChange("email")}
                   placeholder="johanna.doe@email.com"
@@ -74,6 +96,7 @@ export default function Page() {
 
               <Button
                 onPress={() => handleSubmit()}
+                loading={isSubmitting}
                 className="mt-10"
                 icon={ArrowRight}
               >

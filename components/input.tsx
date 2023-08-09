@@ -13,7 +13,10 @@ export default function Input({ style, label, ...rest }: InputProps) {
 
       <TextInput
         {...rest}
-        className="pt-1 pb-3 text-xl border-b border-gray-300 dark:border-gray-800 dark:text-white"
+        className="pt-1 pb-3.5 text-xl border-b border-gray-300 dark:border-gray-800 dark:text-white"
+        style={{
+          lineHeight: 25,
+        }}
       />
     </View>
   );
