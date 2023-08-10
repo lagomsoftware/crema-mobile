@@ -9,6 +9,7 @@ import {
   useColorScheme,
 } from "react-native";
 import { SquircleView } from "react-native-figma-squircle";
+import colors from "tailwindcss/colors";
 
 import classNames from "../lib/classNames";
 
@@ -44,7 +45,8 @@ export default function Button({
           (loading || rest.disabled) && "opacity-50",
         )}
         squircleParams={{
-          fillColor: colorScheme === "light" ? "#1c1917" : "white",
+          fillColor:
+            colorScheme === "light" ? colors.neutral[900] : colors.white,
           cornerSmoothing: 0.7,
           cornerRadius: 30,
         }}

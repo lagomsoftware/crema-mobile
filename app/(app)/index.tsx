@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { impactAsync, ImpactFeedbackStyle, selectionAsync } from "expo-haptics";
+import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 import { Link } from "expo-router";
 import {
   ArrowLeftIcon,
@@ -48,11 +48,7 @@ export default function Home() {
           <View className="space-y-4">
             {data?.map((shot, i) => (
               <Link key={shot.id} asChild href="/profile">
-                <TouchableOpacity
-                  onPress={() => {
-                    selectionAsync();
-                  }}
-                >
+                <TouchableOpacity>
                   <Card>
                     <View className="flex-row justify-between align-baseline">
                       <Text className="text-xl font-medium dark:text-white">

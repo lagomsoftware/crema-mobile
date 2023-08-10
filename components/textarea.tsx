@@ -10,13 +10,13 @@ import colors from "tailwindcss/colors";
 
 import Label from "./label";
 
-interface InputProps extends TextInputProps {
+interface TextareaProps extends TextInputProps {
   suffix?: string;
   label: string;
 }
 
-const Input = (
-  { suffix, style, label, ...rest }: InputProps,
+const Textarea = (
+  { suffix, style, label, ...rest }: TextareaProps,
   ref: Ref<TextInput>,
 ) => {
   const colorScheme = useColorScheme();
@@ -29,7 +29,11 @@ const Input = (
         <TextInput
           {...rest}
           ref={ref}
-          className="pt-2 pb-3 text-xl border-b border-gray-300 dark:border-gray-700 dark:text-white"
+          editable
+          multiline
+          numberOfLines={4}
+          maxLength={40}
+          className="h-64 p-4 text-xl dark:text-white mt-2.5 border dark:border-gray-700 rounded-md"
           placeholderTextColor={
             colorScheme === "light" ? colors.neutral[400] : colors.neutral[600]
           }
@@ -48,4 +52,4 @@ const Input = (
   );
 };
 
-export default forwardRef(Input);
+export default forwardRef(Textarea);

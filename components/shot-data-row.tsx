@@ -18,13 +18,13 @@ export default function ShotDataRow({
   return (
     <View {...rest} className="flex-row items-center justify-between space-x-4">
       <View className="flex-row items-center space-x-2">
-        {/* <Icon size={16} stroke={colors.neutral[400]} /> */}
-
         <Text className="text-base text-gray-500 dark:text-gray-400">
           {label}
         </Text>
       </View>
+
       <View className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+
       <Text
         className="text-base dark:text-white max-w-[60%]"
         ellipsizeMode="tail"

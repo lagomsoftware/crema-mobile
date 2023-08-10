@@ -1,11 +1,6 @@
 import { useState } from "react";
-import {
-  RefreshControl,
-  ScrollView,
-  ScrollViewProps,
-  Text,
-  View,
-} from "react-native";
+import { RefreshControl, ScrollViewProps, Text } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 interface ScreenProps extends ScrollViewProps {
   onRefresh?: () => Promise<any>;
@@ -36,23 +31,28 @@ export default function Screen({
   }
 
   return (
-    <ScrollView
+    <KeyboardAwareScrollView
       {...rest}
       showsVerticalScrollIndicator={false}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        onRefresh ? (
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        ) : undefined
       }
       className="dark:bg-gray-900"
+      contentInsetAdjustmentBehavior="automatic"
       contentContainerStyle={{
-        paddingHorizontal: 20,
-        paddingBottom: 20,
+        paddingBottom: 50,
+        paddingRight: 20,
+        paddingLeft: 20,
         paddingTop: 50,
       }}
-      contentInsetAdjustmentBehavior="automatic"
     >
-      <Text className="text-4xl font-medium dark:text-white">{heading}</Text>
+      <Text className="mb-6 text-4xl font-medium dark:text-white">
+        {heading}
+      </Text>
 
-      <View className="mt-6">{children}</View>
-    </ScrollView>
+      {children}
+    </KeyboardAwareScrollView>
   );
 }
