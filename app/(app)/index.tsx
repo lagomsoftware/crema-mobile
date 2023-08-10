@@ -1,87 +1,131 @@
+import Card from "../../components/card";
 import Screen from "../../components/screen";
-import { Text, View } from "react-native";
+import ShotDataRow from "../../components/shot-data-row";
+import {
+  ActivityIndicator,
+  Text,
+  TouchableOpacity,
+  View,
+  useColorScheme,
+} from "react-native";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  BeanIcon,
+  PlusIcon,
+  SettingsIcon,
+  TimerIcon,
+} from "lucide-react-native";
+import { Link } from "expo-router";
 import { format } from "date-fns";
+import { impactAsync, ImpactFeedbackStyle, selectionAsync } from "expo-haptics";
 import { trpc } from "../../lib/trpc";
 
 export default function Home() {
-  const { data, loading, error, refetch } = trpc.shot.list.useQuery();
+  const colorScheme = useColorScheme();
+
+  const { data, isLoading, error, refetch } = trpc.shot.list.useQuery();
 
   return (
-    <Screen heading="Shots" onRefresh={refetch}>
-      <View className="space-y-4">
-        {data?.map((shot, i) => (
-          <View key={shot.id} className="p-3.5 dark:bg-gray-800 rounded-md">
-            <Text className="text-xl font-medium dark:text-white">
-              {format(new Date(shot.createdAt), "MMM dd")}
-            </Text>
+    <>
+      <Link href="/new-shot" asChild>
+        <TouchableOpacity
+          className="absolute z-10 items-center justify-center bg-gray-900 dark:bg-white rounded-full w-[72] h-[72] bottom-[22] right-[17] shadow-lg shadow-gray-600/40 dark:shadow-gray-950"
+          onPressIn={() => {
+            impactAsync(ImpactFeedbackStyle.Medium);
+          }}
+        >
+          <PlusIcon
+            size={36}
+            stroke={colorScheme === "light" ? "white" : "black"}
+          />
+        </TouchableOpacity>
+      </Link>
 
-            <View className="flex-row items-center mt-1.5">
-              <Text className="text-base text-gray-500 dark:text-neutral-400">
-                Shot #{+1}
-              </Text>
+      <Screen heading="My shots" onRefresh={refetch}>
+        {data ? (
+          <View className="space-y-4">
+            {data?.map((shot, i) => (
+              <Link key={shot.id} asChild href="/profile">
+                <TouchableOpacity
+                  onPress={() => {
+                    selectionAsync();
+                  }}
+                >
+                  <Card>
+                    <View className="flex-row justify-between align-baseline">
+                      <Text className="text-xl font-medium dark:text-white">
+                        {format(new Date(shot.createdAt), "MMM dd")}
+                      </Text>
 
-              <Text className="ml-2 mr-1.5 text-base text-gray-400 dark:text-neutral-500">
-                •
-              </Text>
+                      <View className="flex-row items-center">
+                        <Text className="text-base text-gray-500 dark:text-neutral-400">
+                          Shot #{data.length - i}
+                        </Text>
 
-              <Text className="text-base text-gray-500 dark:text-neutral-400">
-                {format(new Date(shot.createdAt), "HH:mm")}
-              </Text>
-            </View>
+                        <Text className="ml-2 mr-1.5 text-base text-gray-400 dark:text-neutral-500">
+                          •
+                        </Text>
 
-            <View className="mt-4 space-y-3">
-              <View className="flex-row items-center justify-between space-x-4">
-                <Text className="text-gray-500 dark:text-gray-400">Dose</Text>
-                <View className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-                <Text className="dark:text-white">
-                  {shot.dose}{" "}
-                  <Text className="text-gray-500 dark:text-gray-400">g</Text>
-                </Text>
-              </View>
+                        <Text className="text-base text-gray-500 dark:text-neutral-400">
+                          {format(new Date(shot.createdAt), "HH:mm")}
+                        </Text>
+                      </View>
+                    </View>
 
-              <View className="flex-row items-center justify-between space-x-4">
-                <Text className="text-gray-500 dark:text-gray-400">Yield</Text>
-                <View className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-                <Text className="dark:text-white">
-                  {shot.yield}{" "}
-                  <Text className="text-gray-500 dark:text-gray-400">g</Text>
-                </Text>
-              </View>
+                    <View className="mt-4 space-y-2.5">
+                      <ShotDataRow
+                        icon={ArrowRightIcon}
+                        label="Dose"
+                        value={shot.dose}
+                        suffix="g"
+                      />
 
-              <View className="flex-row items-center justify-between space-x-4">
-                <Text className="text-gray-500 dark:text-gray-400">
-                  Duration
-                </Text>
-                <View className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-                <Text className="dark:text-white">
-                  {shot.duration}{" "}
-                  <Text className="text-gray-500 dark:text-gray-400">sec</Text>
-                </Text>
-              </View>
+                      <ShotDataRow
+                        icon={ArrowLeftIcon}
+                        label="Yield"
+                        value={shot.yield}
+                        suffix="g"
+                      />
 
-              <View className="flex-row items-center justify-between space-x-4">
-                <Text className="text-gray-500 dark:text-gray-400">
-                  Grind setting
-                </Text>
-                <View className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-                <Text className="dark:text-white">
-                  {typeof shot.grindSetting === "number"
-                    ? shot.grindSetting
-                    : "N/A"}
-                </Text>
-              </View>
+                      <ShotDataRow
+                        icon={TimerIcon}
+                        label="Extraction"
+                        value={shot.duration}
+                        suffix="s"
+                      />
 
-              <View className="flex-row items-center justify-between space-x-4">
-                <Text className="text-gray-500 dark:text-gray-400">Coffee</Text>
-                <View className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-                <Text className="text-right dark:text-white">
-                  {shot.coffee ?? "N/A"}
-                </Text>
-              </View>
-            </View>
+                      <ShotDataRow
+                        icon={SettingsIcon}
+                        label="Grind"
+                        value={
+                          typeof shot.grindSetting === "number"
+                            ? shot.grindSetting
+                            : "N/A"
+                        }
+                      />
+
+                      <ShotDataRow
+                        icon={BeanIcon}
+                        label="Bean"
+                        value={shot.coffee ?? "N/A"}
+                      />
+                    </View>
+                  </Card>
+                </TouchableOpacity>
+              </Link>
+            ))}
           </View>
-        ))}
-      </View>
-    </Screen>
+        ) : isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <Text className="text-base text-red-600 dark:text-rose-400">
+            Oh no! We couldn't retrieve your shot history. Try refreshing and
+            see if it helps. If the issue continues, please get in touch with
+            us.
+          </Text>
+        )}
+      </Screen>
+    </>
   );
 }

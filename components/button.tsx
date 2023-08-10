@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { LucideIcon } from "lucide-react-native";
 import { SquircleView } from "react-native-figma-squircle";
-import { impactAsync } from "expo-haptics";
+import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 
 interface ButtonProps extends TouchableOpacityProps {
   icon?: LucideIcon;
@@ -29,11 +29,11 @@ export default function Button({
     <TouchableOpacity
       {...rest}
       style={style}
-      onPressIn={(e) => {
-        impactAsync();
+      onPress={(e) => {
+        impactAsync(ImpactFeedbackStyle.Heavy);
 
-        if (rest.onPressIn) {
-          rest.onPressIn(e);
+        if (rest.onPress) {
+          rest.onPress(e);
         }
       }}
     >

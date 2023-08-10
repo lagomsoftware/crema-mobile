@@ -1,7 +1,11 @@
+import {
+  RefreshControl,
+  ScrollView,
+  ScrollViewProps,
+  Text,
+  View,
+} from "react-native";
 import { useState } from "react";
-import { RefreshControl, View } from "react-native";
-import { ScrollView, ScrollViewProps, Text } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface ScreenProps extends ScrollViewProps {
   onRefresh?: () => Promise<any>;

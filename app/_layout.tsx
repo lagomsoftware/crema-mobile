@@ -1,9 +1,11 @@
 import "../global.css";
-import AuthContext, { AuthProvider } from "../lib/context/auth";
+import { AuthProvider } from "../lib/context/auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Slot, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import { trpc, trpcClient } from "../lib/trpc";
-import { useState } from "react";
+import { useColorScheme as _useColorScheme } from "nativewind";
+import { useColorScheme } from "react-native";
+import { useEffect, useState } from "react";
 
 export default function () {
   const [queryClient] = useState(
@@ -16,6 +18,13 @@ export default function () {
         },
       }),
   );
+
+  const colorScheme = useColorScheme();
+  const { setColorScheme } = _useColorScheme();
+
+  useEffect(() => {
+    setColorScheme(colorScheme);
+  }, [colorScheme]);
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
