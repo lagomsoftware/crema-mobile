@@ -1,7 +1,5 @@
 import { Icon } from "lucide-react-native";
-import { ViewProps } from "react-native";
-import { Text, View } from "react-native";
-import colors from "tailwindcss/colors";
+import { ViewProps, Text, View } from "react-native";
 
 interface ShotDataRowProps extends ViewProps {
   value: string | number;

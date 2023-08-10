@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   RefreshControl,
   ScrollView,
@@ -5,7 +6,6 @@ import {
   Text,
   View,
 } from "react-native";
-import { useState } from "react";
 
 interface ScreenProps extends ScrollViewProps {
   onRefresh?: () => Promise<any>;

@@ -1,13 +1,6 @@
-import Card from "../../components/card";
-import Screen from "../../components/screen";
-import ShotDataRow from "../../components/shot-data-row";
-import {
-  ActivityIndicator,
-  Text,
-  TouchableOpacity,
-  View,
-  useColorScheme,
-} from "react-native";
+import { format } from "date-fns";
+import { impactAsync, ImpactFeedbackStyle, selectionAsync } from "expo-haptics";
+import { Link } from "expo-router";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -16,15 +9,23 @@ import {
   SettingsIcon,
   TimerIcon,
 } from "lucide-react-native";
-import { Link } from "expo-router";
-import { format } from "date-fns";
-import { impactAsync, ImpactFeedbackStyle, selectionAsync } from "expo-haptics";
+import {
+  ActivityIndicator,
+  Text,
+  TouchableOpacity,
+  View,
+  useColorScheme,
+} from "react-native";
+
+import Card from "../../components/card";
+import Screen from "../../components/screen";
+import ShotDataRow from "../../components/shot-data-row";
 import { trpc } from "../../lib/trpc";
 
 export default function Home() {
   const colorScheme = useColorScheme();
 
-  const { data, isLoading, error, refetch } = trpc.shot.list.useQuery();
+  const { data, isLoading, refetch } = trpc.shot.list.useQuery();
 
   return (
     <>

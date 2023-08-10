@@ -1,6 +1,8 @@
-import AuthContext from "../../lib/context/auth";
-import Button from "../../components/button";
-import Input from "../../components/input";
+import { Image } from "expo-image";
+import { Link } from "expo-router";
+import { Formik } from "formik";
+import { ArrowRight } from "lucide-react-native";
+import { useContext } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -9,19 +11,18 @@ import {
   Text,
   View,
 } from "react-native";
-import { ArrowRight } from "lucide-react-native";
-import { Formik } from "formik";
-import { Image } from "expo-image";
-import { Link } from "expo-router";
-import { trpc } from "../../lib/trpc";
-import { useContext } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import Button from "../../components/button";
+import Input from "../../components/input";
+import AuthContext from "../../lib/context/auth";
+import { trpc } from "../../lib/trpc";
 
 export default function Login() {
   const insets = useSafeAreaInsets();
 
   // Global state
-  const { token, setToken, loading } = useContext(AuthContext);
+  const { setToken } = useContext(AuthContext);
 
   // Server state
   const { mutateAsync } = trpc.auth.login.useMutation({

@@ -1,6 +1,7 @@
+import { useRouter, useSegments } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import { router, useRouter, useSegments } from "expo-router";
 import { createContext, ReactNode, useEffect, useState } from "react";
+
 import { getToken } from "../auth";
 
 const AuthContext = createContext<{

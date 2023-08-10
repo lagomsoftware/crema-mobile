@@ -1,6 +1,6 @@
-import colors from "tailwindcss/colors";
-import { SquircleView } from "react-native-figma-squircle";
 import { ViewProps, useColorScheme } from "react-native";
+import { SquircleView } from "react-native-figma-squircle";
+import colors from "tailwindcss/colors";
 
 export default function Card({ children, ...rest }: ViewProps) {
   const colorScheme = useColorScheme();

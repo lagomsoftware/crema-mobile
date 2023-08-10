@@ -1,7 +1,8 @@
-import AuthContext from "../../lib/context/auth";
+import { useContext } from "react";
+
 import Button from "../../components/button";
 import Screen from "../../components/screen";
-import { useContext } from "react";
+import AuthContext from "../../lib/context/auth";
 
 export default function Profile() {
   const { setToken } = useContext(AuthContext);

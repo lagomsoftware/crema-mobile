@@ -1,7 +1,8 @@
-import type { AppRouter } from "../../crema-api";
-import { createTRPCReact } from "@trpc/react-query";
-import { getToken } from "./auth";
 import { httpBatchLink } from "@trpc/client";
+import { createTRPCReact } from "@trpc/react-query";
+
+import { getToken } from "./auth";
+import type { AppRouter } from "../../crema-api";
 
 export const trpc = createTRPCReact<AppRouter>();
 

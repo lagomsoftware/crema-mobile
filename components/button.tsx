@@ -1,4 +1,5 @@
-import classNames from "../lib/classNames";
+import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
+import { LucideIcon } from "lucide-react-native";
 import {
   ActivityIndicator,
   Text,
@@ -7,9 +8,9 @@ import {
   View,
   useColorScheme,
 } from "react-native";
-import { LucideIcon } from "lucide-react-native";
 import { SquircleView } from "react-native-figma-squircle";
-import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
+
+import classNames from "../lib/classNames";
 
 interface ButtonProps extends TouchableOpacityProps {
   icon?: LucideIcon;

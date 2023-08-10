@@ -1,4 +1,4 @@
-const classNames = (...classes: Array<string | false | undefined>) =>
+const classNames = (...classes: (string | false | undefined)[]) =>
   classes.filter(Boolean).join(" ");
 
 export default classNames;

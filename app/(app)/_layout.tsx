@@ -1,4 +1,4 @@
-import colors from "tailwindcss/colors";
+import { Tabs } from "expo-router";
 import {
   AreaChartIcon,
   BeanIcon,
@@ -6,8 +6,8 @@ import {
   TableProperties,
   UserIcon,
 } from "lucide-react-native";
-import { Tabs } from "expo-router";
 import { useColorScheme } from "react-native";
+import colors from "tailwindcss/colors";
 
 export default function () {
   const colorScheme = useColorScheme();
