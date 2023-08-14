@@ -33,7 +33,7 @@ const Textarea = (
           multiline
           numberOfLines={4}
           maxLength={40}
-          className="h-64 p-4 text-xl dark:text-white mt-2.5 border dark:border-gray-700 rounded-md"
+          className="h-64 p-4 text-xl dark:text-white mt-2.5 border border-gray-300 dark:border-gray-700 rounded-md"
           placeholderTextColor={
             colorScheme === "light" ? colors.neutral[400] : colors.neutral[600]
           }

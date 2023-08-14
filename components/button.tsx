@@ -14,11 +14,13 @@ import colors from "tailwindcss/colors";
 import classNames from "../lib/classNames";
 
 interface ButtonProps extends TouchableOpacityProps {
+  variant?: "default" | "secondary";
   icon?: LucideIcon;
   loading?: boolean;
 }
 
 export default function Button({
+  variant = "default",
   icon: Icon,
   children,
   loading,
@@ -40,20 +42,34 @@ export default function Button({
       }}
     >
       <SquircleView
+        squircleParams={{
+          cornerSmoothing: 0.7,
+          cornerRadius: 12,
+          fillColor: {
+            light: { default: colors.neutral[900], secondary: colors.white }[
+              variant
+            ],
+            dark: { default: colors.white, secondary: colors.neutral[800] }[
+              variant
+            ],
+          }[colorScheme],
+        }}
         className={classNames(
-          "flex-row items-center justify-between px-6 py-3.5 space-x-2",
+          "flex-row items-center justify-between px-6 py-3.5 space-x-2 shadow-lg shadow-gray-600/20 dark:shadow-gray-950",
           (loading || rest.disabled) && "opacity-50",
         )}
-        squircleParams={{
-          fillColor:
-            colorScheme === "light" ? colors.neutral[900] : colors.white,
-          cornerSmoothing: 0.7,
-          cornerRadius: 30,
-        }}
       >
         <View className={Icon ? "w-[22]" : loading ? "w-[22]" : undefined} />
 
-        <Text className="text-lg font-medium text-white dark:text-black">
+        <Text
+          className={classNames(
+            "text-lg font-medium",
+            {
+              default: "text-white dark:text-black",
+              secondary: "dark:text-white",
+            }[variant],
+          )}
+        >
           {children}
         </Text>
 

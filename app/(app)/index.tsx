@@ -114,7 +114,7 @@ export default function Home() {
             ))}
           </View>
         ) : isLoading ? (
-          <ActivityIndicator />
+          <ActivityIndicator size="large" />
         ) : (
           <Text className="text-base text-red-600 dark:text-rose-400">
             Oh no! We couldn't retrieve your shot history. Try refreshing and

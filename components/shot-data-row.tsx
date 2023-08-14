@@ -23,7 +23,7 @@ export default function ShotDataRow({
         </Text>
       </View>
 
-      <View className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+      <View className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
 
       <Text
         className="text-base dark:text-white max-w-[60%]"

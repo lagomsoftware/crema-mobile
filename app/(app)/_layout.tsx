@@ -18,9 +18,9 @@ export default function () {
         headerShown: false,
         tabBarStyle: {
           backgroundColor:
-            colorScheme === "light" ? colors.white : colors.neutral[800],
+            colorScheme === "light" ? colors.white : colors.neutral[900],
           borderTopColor:
-            colorScheme === "light" ? colors.neutral[200] : colors.neutral[600],
+            colorScheme === "light" ? colors.neutral[200] : colors.neutral[700],
         },
         tabBarInactiveTintColor:
           colorScheme === "light" ? colors.neutral[500] : colors.neutral[500],

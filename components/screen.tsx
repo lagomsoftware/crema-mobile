@@ -39,7 +39,7 @@ export default function Screen({
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
         ) : undefined
       }
-      className="dark:bg-gray-900"
+      className="dark:bg-gray-950"
       contentInsetAdjustmentBehavior="automatic"
       contentContainerStyle={{
         paddingBottom: 50,

@@ -26,7 +26,7 @@ export default function NewShot() {
   const { mutateAsync } = trpc.shot.create.useMutation({
     onError: () => {
       Alert.alert(
-        "Oh no! It seems we could not add your shot for some reason. Please try again. If the issue persists, please get in touch with us."
+        "Oh no! It seems we could not add your shot for some reason. Please try again. If the issue persists, please get in touch with us.",
       );
     },
   });
@@ -149,8 +149,18 @@ export default function NewShot() {
           </View>
 
           <InputAccessoryView nativeID="cta">
-            <View className="px-5 pb-5">
+            <View className="flex-row px-3 pb-3 space-x-3">
               <Button
+                variant="secondary"
+                onPress={() => {
+                  router.back();
+                }}
+              >
+                Back
+              </Button>
+
+              <Button
+                className="flex-1"
                 onPress={() => handleSubmit()}
                 loading={isSubmitting}
                 icon={CheckIcon}

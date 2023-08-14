@@ -29,7 +29,7 @@ const Input = (
         <TextInput
           {...rest}
           ref={ref}
-          className="pt-2 pb-3 text-xl border-b border-gray-300 dark:border-gray-700 dark:text-white"
+          className="pt-2 pb-3 text-xl border-b border-gray-300 dark:border-gray-800 dark:text-white"
           placeholderTextColor={
             colorScheme === "light" ? colors.neutral[400] : colors.neutral[600]
           }
@@ -39,7 +39,7 @@ const Input = (
         />
 
         {suffix && (
-          <Text className="absolute right-0 text-xl text-gray-500 top-1.5 dark:text-gray-400">
+          <Text className="absolute right-0 text-xl text-gray-500 top-1.5">
             {suffix}
           </Text>
         )}
