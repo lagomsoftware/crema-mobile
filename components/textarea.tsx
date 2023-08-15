@@ -17,7 +17,7 @@ interface TextareaProps extends TextInputProps {
 
 const Textarea = (
   { suffix, style, label, ...rest }: TextareaProps,
-  ref: Ref<TextInput>
+  ref: Ref<TextInput>,
 ) => {
   const colorScheme = useColorScheme();
 

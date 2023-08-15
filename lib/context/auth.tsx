@@ -37,10 +37,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    if (!token && rootSegment !== "(auth)") {
-      router.replace("/login");
-    } else if (token && rootSegment !== "(app)") {
-      router.replace("/");
+    if (!token && rootSegment !== "auth") {
+      router.replace("/auth/login");
+    } else if (token && rootSegment !== "home") {
+      router.replace("/home");
     }
   }, [token, loading, rootSegment]);
 

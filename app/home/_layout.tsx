@@ -2,7 +2,6 @@ import { Tabs } from "expo-router";
 import {
   AreaChartIcon,
   BeanIcon,
-  PlusIcon,
   TableProperties,
   UserIcon,
 } from "lucide-react-native";

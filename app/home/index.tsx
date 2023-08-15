@@ -34,7 +34,7 @@ export default function Home() {
         className="absolute z-10 items-center justify-center bg-gray-900 dark:bg-white rounded-full w-[72] h-[72] bottom-[22] right-[17] shadow-lg shadow-gray-600/40 dark:shadow-gray-950"
         onPressIn={() => {
           impactAsync(ImpactFeedbackStyle.Medium);
-          router.push("/(new-shot)/dose");
+          router.push("/new-shot/dose");
         }}
       >
         <PlusIcon

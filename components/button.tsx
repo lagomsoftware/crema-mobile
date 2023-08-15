@@ -8,8 +8,6 @@ import {
   View,
   useColorScheme,
 } from "react-native";
-import { SquircleView } from "react-native-figma-squircle";
-import colors from "tailwindcss/colors";
 
 import classNames from "../lib/classNames";
 
@@ -43,7 +41,7 @@ export default function Button({
       className={classNames(
         "flex-row items-center justify-between px-6 py-3.5 gap-x-2 rounded-full",
         { default: "bg-gray-900 dark:bg-white", secondary: "" }[variant],
-        (loading || rest.disabled) && "opacity-50"
+        (loading || rest.disabled) && "opacity-50",
       )}
     >
       <View className={Icon ? "w-[22]" : loading ? "w-[22]" : undefined} />
@@ -54,7 +52,7 @@ export default function Button({
           {
             default: "text-white dark:text-black",
             secondary: "dark:text-white",
-          }[variant]
+          }[variant],
         )}
       >
         {children}

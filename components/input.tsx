@@ -17,7 +17,7 @@ interface InputProps extends TextInputProps {
 
 const Input = (
   { suffix, style, label, ...rest }: InputProps,
-  ref: Ref<TextInput>
+  ref: Ref<TextInput>,
 ) => {
   const colorScheme = useColorScheme();
 

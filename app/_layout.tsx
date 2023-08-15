@@ -17,7 +17,7 @@ export default function () {
             retry: 1,
           },
         },
-      })
+      }),
   );
 
   const colorScheme = useColorScheme();
@@ -31,7 +31,10 @@ export default function () {
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <Stack screenOptions={{ headerShown: false }} />
+          <Stack>
+            <Stack.Screen name="auth/login" options={{ headerShown: false }} />
+            <Stack.Screen name="home" options={{ headerShown: false }} />
+          </Stack>
         </AuthProvider>
       </QueryClientProvider>
     </trpc.Provider>
