@@ -40,49 +40,35 @@ export default function Button({
           rest.onPress(e);
         }
       }}
+      className={classNames(
+        "flex-row items-center justify-between px-6 py-3.5 gap-x-2 rounded-full",
+        { default: "bg-gray-900 dark:bg-white", secondary: "" }[variant],
+        (loading || rest.disabled) && "opacity-50"
+      )}
     >
-      <SquircleView
-        squircleParams={{
-          cornerSmoothing: 0.7,
-          cornerRadius: 12,
-          fillColor: {
-            light: { default: colors.neutral[900], secondary: colors.white }[
-              variant
-            ],
-            dark: { default: colors.white, secondary: colors.neutral[800] }[
-              variant
-            ],
-          }[colorScheme],
-        }}
+      <View className={Icon ? "w-[22]" : loading ? "w-[22]" : undefined} />
+
+      <Text
         className={classNames(
-          "flex-row items-center justify-between px-6 py-3.5 space-x-2 shadow-lg shadow-gray-600/20 dark:shadow-gray-950",
-          (loading || rest.disabled) && "opacity-50",
+          "text-lg font-medium",
+          {
+            default: "text-white dark:text-black",
+            secondary: "dark:text-white",
+          }[variant]
         )}
       >
-        <View className={Icon ? "w-[22]" : loading ? "w-[22]" : undefined} />
+        {children}
+      </Text>
 
-        <Text
-          className={classNames(
-            "text-lg font-medium",
-            {
-              default: "text-white dark:text-black",
-              secondary: "dark:text-white",
-            }[variant],
-          )}
-        >
-          {children}
-        </Text>
-
-        {loading ? (
-          <ActivityIndicator
-            color={colorScheme === "light" ? "white" : "black"}
-          />
-        ) : Icon ? (
-          <Icon size={22} color={colorScheme === "light" ? "white" : "black"} />
-        ) : (
-          <View />
-        )}
-      </SquircleView>
+      {loading ? (
+        <ActivityIndicator
+          color={colorScheme === "light" ? "white" : "black"}
+        />
+      ) : Icon ? (
+        <Icon size={22} color={colorScheme === "light" ? "white" : "black"} />
+      ) : (
+        <View />
+      )}
     </TouchableOpacity>
   );
 }

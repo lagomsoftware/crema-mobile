@@ -17,7 +17,7 @@ interface InputProps extends TextInputProps {
 
 const Input = (
   { suffix, style, label, ...rest }: InputProps,
-  ref: Ref<TextInput>,
+  ref: Ref<TextInput>
 ) => {
   const colorScheme = useColorScheme();
 
@@ -31,7 +31,7 @@ const Input = (
           ref={ref}
           className="pt-2 pb-3 text-xl border-b border-gray-300 dark:border-gray-800 dark:text-white"
           placeholderTextColor={
-            colorScheme === "light" ? colors.neutral[400] : colors.neutral[600]
+            colorScheme === "light" ? colors.stone[400] : colors.stone[600]
           }
           style={{
             lineHeight: 25,

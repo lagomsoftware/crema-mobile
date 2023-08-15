@@ -17,7 +17,7 @@ interface TextareaProps extends TextInputProps {
 
 const Textarea = (
   { suffix, style, label, ...rest }: TextareaProps,
-  ref: Ref<TextInput>,
+  ref: Ref<TextInput>
 ) => {
   const colorScheme = useColorScheme();
 
@@ -35,7 +35,7 @@ const Textarea = (
           maxLength={40}
           className="h-64 p-4 text-xl dark:text-white mt-2.5 border border-gray-300 dark:border-gray-700 rounded-md"
           placeholderTextColor={
-            colorScheme === "light" ? colors.neutral[400] : colors.neutral[600]
+            colorScheme === "light" ? colors.stone[400] : colors.stone[600]
           }
           style={{
             lineHeight: 25,

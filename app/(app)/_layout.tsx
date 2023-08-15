@@ -18,12 +18,12 @@ export default function () {
         headerShown: false,
         tabBarStyle: {
           backgroundColor:
-            colorScheme === "light" ? colors.white : colors.neutral[900],
+            colorScheme === "light" ? colors.white : colors.stone[900],
           borderTopColor:
-            colorScheme === "light" ? colors.neutral[200] : colors.neutral[700],
+            colorScheme === "light" ? colors.stone[300] : colors.stone[700],
         },
         tabBarInactiveTintColor:
-          colorScheme === "light" ? colors.neutral[500] : colors.neutral[500],
+          colorScheme === "light" ? colors.stone[500] : colors.stone[500],
         tabBarActiveTintColor:
           colorScheme === "light" ? colors.black : colors.white,
       }}
@@ -38,15 +38,15 @@ export default function () {
         }}
       />
 
-      <Tabs.Screen
-        name="new-shot"
-        options={{
-          title: "New shot",
-          tabBarIcon: ({ color, size }) => (
-            <PlusIcon strokeWidth={1.5} size={size} color={color} />
-          ),
-        }}
-      />
+      {/* <Tabs.Screen */}
+      {/*   name="new-shot" */}
+      {/*   options={{ */}
+      {/*     title: "New shot", */}
+      {/*     tabBarIcon: ({ color, size }) => ( */}
+      {/*       <PlusIcon strokeWidth={1.5} size={size} color={color} /> */}
+      {/*     ), */}
+      {/*   }} */}
+      {/* /> */}
 
       <Tabs.Screen
         name="beans"

@@ -48,7 +48,10 @@ export default function Screen({
         paddingTop: 50,
       }}
     >
-      <Text className="mb-6 text-4xl font-medium dark:text-white">
+      <Text
+        className="mb-6 font-medium dark:text-white"
+        style={{ fontSize: 46 }}
+      >
         {heading}
       </Text>
 

@@ -11,7 +11,7 @@ export default function Card({ children, ...rest }: ViewProps) {
       squircleParams={{
         cornerRadius: 8,
         cornerSmoothing: 0.7,
-        fillColor: colorScheme === "light" ? colors.white : colors.neutral[900],
+        fillColor: colorScheme === "light" ? colors.white : colors.stone[900],
       }}
       className="p-4"
     >

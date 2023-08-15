@@ -17,7 +17,7 @@ export default function () {
             retry: 1,
           },
         },
-      }),
+      })
   );
 
   const colorScheme = useColorScheme();
