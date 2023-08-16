@@ -32,16 +32,15 @@ export default function Button({
       {...rest}
       style={style}
       onPress={(e) => {
-        impactAsync(ImpactFeedbackStyle.Heavy);
+        impactAsync(ImpactFeedbackStyle.Medium);
 
         if (rest.onPress) {
           rest.onPress(e);
         }
       }}
       className={classNames(
-        "flex-row items-center justify-between px-6 py-3.5 gap-x-2 rounded-full",
+        "flex-row items-center justify-between px-6 py-4 rounded-full space-x-2",
         { default: "bg-gray-900 dark:bg-white", secondary: "" }[variant],
-        (loading || rest.disabled) && "opacity-50",
       )}
     >
       <View className={Icon ? "w-[22]" : loading ? "w-[22]" : undefined} />

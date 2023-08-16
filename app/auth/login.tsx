@@ -43,8 +43,8 @@ export default function Login() {
       <ScrollView>
         <Formik
           initialValues={{
-            email: "",
-            password: "",
+            email: "albin.groen@gmail.com",
+            password: "Opelsaab14",
           }}
           onSubmit={(values) => {
             mutateAsync(values);

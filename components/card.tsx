@@ -13,7 +13,7 @@ export default function Card({ children, ...rest }: ViewProps) {
         cornerSmoothing: 0.7,
         fillColor: colorScheme === "light" ? colors.white : colors.stone[900],
       }}
-      className="p-4"
+      className="p-[18]"
     >
       {children}
     </SquircleView>

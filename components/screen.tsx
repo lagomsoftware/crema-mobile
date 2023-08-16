@@ -1,6 +1,12 @@
 import { useState } from "react";
-import { RefreshControl, ScrollViewProps, Text } from "react-native";
+import {
+  RefreshControl,
+  ScrollViewProps,
+  Text,
+  useColorScheme,
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import colors from "tailwindcss/colors";
 
 interface ScreenProps extends ScrollViewProps {
   onRefresh?: () => Promise<any>;
@@ -14,6 +20,7 @@ export default function Screen({
   ...rest
 }: ScreenProps) {
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const colorScheme = useColorScheme();
 
   // Handlers
   async function handleRefresh() {
@@ -39,8 +46,11 @@ export default function Screen({
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
         ) : undefined
       }
-      className="dark:bg-gray-950"
       contentInsetAdjustmentBehavior="automatic"
+      style={{
+        backgroundColor:
+          colorScheme === "light" ? colors.stone[200] : colors.stone[950],
+      }}
       contentContainerStyle={{
         paddingBottom: 50,
         paddingRight: 20,

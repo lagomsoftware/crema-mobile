@@ -18,7 +18,7 @@ export default function ShotDataRow({
   return (
     <View {...rest} className="flex-row items-center justify-between space-x-4">
       <View className="flex-row items-center space-x-2">
-        <Text className="text-base text-gray-500 dark:text-gray-400">
+        <Text className="text-base text-gray-500 dark:text-gray-500">
           {label}
         </Text>
       </View>

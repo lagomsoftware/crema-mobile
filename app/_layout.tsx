@@ -34,6 +34,10 @@ export default function () {
           <Stack>
             <Stack.Screen name="auth/login" options={{ headerShown: false }} />
             <Stack.Screen name="home" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="(new-shot)"
+              options={{ presentation: "modal", headerShown: false }}
+            />
           </Stack>
         </AuthProvider>
       </QueryClientProvider>

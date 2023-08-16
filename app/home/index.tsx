@@ -31,10 +31,10 @@ export default function Home() {
   return (
     <>
       <TouchableOpacity
-        className="absolute z-10 items-center justify-center bg-gray-900 dark:bg-white rounded-full w-[72] h-[72] bottom-[22] right-[17] shadow-lg shadow-gray-600/40 dark:shadow-gray-950"
+        className="absolute z-10 items-center justify-center bg-gray-900 dark:bg-white rounded-full w-[72] h-[72] bottom-[22] right-[17] shadow-lg shadow-gray-500 dark:shadow-gray-950"
         onPressIn={() => {
           impactAsync(ImpactFeedbackStyle.Medium);
-          router.push("/new-shot/dose");
+          router.push("/(new-shot)/dose");
         }}
       >
         <PlusIcon
@@ -51,20 +51,20 @@ export default function Home() {
                 <TouchableOpacity>
                   <Card>
                     <View className="flex-row justify-between align-baseline">
-                      <Text className="text-xl font-medium dark:text-white">
+                      <Text className="text-2xl font-medium dark:text-white">
                         {format(new Date(shot.createdAt), "MMM dd")}
                       </Text>
 
                       <View className="flex-row items-center">
-                        <Text className="text-base text-gray-500 dark:text-stone-400">
+                        <Text className="text-base text-gray-500 dark:text-stone-500">
                           Shot #{data.length - i}
                         </Text>
 
-                        <Text className="ml-2 mr-1.5 text-base text-gray-400 dark:text-stone-500">
+                        <Text className="ml-2 mr-1.5 text-base text-gray-400 dark:text-stone-600">
                           •
                         </Text>
 
-                        <Text className="text-base text-gray-500 dark:text-stone-400">
+                        <Text className="text-base text-gray-500 dark:text-stone-500">
                           {format(new Date(shot.createdAt), "HH:mm")}
                         </Text>
                       </View>

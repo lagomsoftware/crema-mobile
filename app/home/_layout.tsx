@@ -37,16 +37,6 @@ export default function () {
         }}
       />
 
-      {/* <Tabs.Screen */}
-      {/*   name="new-shot" */}
-      {/*   options={{ */}
-      {/*     title: "New shot", */}
-      {/*     tabBarIcon: ({ color, size }) => ( */}
-      {/*       <PlusIcon strokeWidth={1.5} size={size} color={color} /> */}
-      {/*     ), */}
-      {/*   }} */}
-      {/* /> */}
-
       <Tabs.Screen
         name="beans"
         options={{
