@@ -58,7 +58,7 @@ export default function NewShot() {
           <Button
             disabled={!value}
             onPress={() => {
-              router.push(`/(new-shot)/yield?dose=${value}`);
+              router.push(`/(new-shot)/yield-amount?dose=${value}`);
             }}
             icon={ArrowRightIcon}
           >

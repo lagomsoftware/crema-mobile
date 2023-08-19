@@ -14,7 +14,7 @@ export default function NewShot() {
   const router = useRouter();
 
   // URL state
-  const { dose, yield: _yield, duration } = useLocalSearchParams();
+  const { dose, yieldAmount, duration } = useLocalSearchParams();
 
   // Server state
   const { data: coffees } = trpc.shot.listCoffees.useQuery();
@@ -53,9 +53,10 @@ export default function NewShot() {
         </View>
 
         <Button
-          disabled={!value}
           onPress={() => {
-            router.push(`/(new-shot)/duration?dose=${dose}&coffee=${value}`);
+            router.push(
+              `/(new-shot)/grind-setting?dose=${dose}&yieldAmount=${yieldAmount}&duration=${duration}&coffee=${value}`,
+            );
           }}
           style={{ marginBottom: insets.bottom }}
           icon={ArrowRightIcon}

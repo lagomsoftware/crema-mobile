@@ -16,7 +16,7 @@ export default function NewShot() {
   const [value, setValue] = useState("");
   const router = useRouter();
 
-  const { dose, yield: _yield } = useLocalSearchParams();
+  const { dose, yieldAmount } = useLocalSearchParams();
 
   return (
     <>
@@ -56,7 +56,7 @@ export default function NewShot() {
             disabled={!value}
             onPress={() => {
               router.push(
-                `/(new-shot)/coffee?dose=${dose}&yield=${_yield}&duration=${value}`,
+                `/(new-shot)/coffee?dose=${dose}&yieldAmount=${yieldAmount}&duration=${value}`,
               );
             }}
             icon={ArrowRightIcon}
