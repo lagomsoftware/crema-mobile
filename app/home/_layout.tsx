@@ -38,26 +38,6 @@ export default function () {
       />
 
       <Tabs.Screen
-        name="beans"
-        options={{
-          title: "Beans",
-          tabBarIcon: ({ color, size }) => (
-            <BeanIcon strokeWidth={1.5} size={size} color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="analytics"
-        options={{
-          title: "Analytics",
-          tabBarIcon: ({ color, size }) => (
-            <AreaChartIcon strokeWidth={1.5} size={size} color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
