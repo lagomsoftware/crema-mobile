@@ -1,51 +1,84 @@
-import { Tabs } from "expo-router";
-import {
-  AreaChartIcon,
-  BeanIcon,
-  TableProperties,
-  UserIcon,
-} from "lucide-react-native";
+import { Stack } from "expo-router";
 import { useColorScheme } from "react-native";
 import colors from "tailwindcss/colors";
 
-export default function () {
+export default function HomeLayout() {
   const colorScheme = useColorScheme();
 
+  const largeHeader = {
+    headerLargeTitle: true,
+    headerLargeTitleStyle: {
+      fontSize: 42,
+      fontWeight: "500",
+    },
+    headerTintColor: { light: "black", dark: "white" }[colorScheme],
+    headerShadowVisible: false,
+    headerStyle: {
+      backgroundColor: { light: colors.stone[100], dark: colors.stone[950] }[
+        colorScheme
+      ],
+    },
+    headerLargeStyle: {
+      backgroundColor: { light: colors.stone[100], dark: colors.stone[950] }[
+        colorScheme
+      ],
+    },
+  };
+
+  const newShotScreen = {
+    headerStyle: {
+      backgroundColor: { light: colors.white, dark: colors.stone[950] }[
+        colorScheme
+      ],
+    },
+    headerShadowVisible: false,
+    headerTintColor: { light: colors.black, dark: colors.white }[colorScheme],
+    contentStyle: {
+      backgroundColor: { light: colors.white, dark: colors.stone[950] }[
+        colorScheme
+      ],
+    },
+  };
+
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: {
-          backgroundColor:
-            colorScheme === "light" ? colors.white : colors.stone[900],
-          borderTopColor:
-            colorScheme === "light" ? colors.stone[300] : colors.stone[700],
-        },
-        tabBarInactiveTintColor:
-          colorScheme === "light" ? colors.stone[500] : colors.stone[500],
-        tabBarActiveTintColor:
-          colorScheme === "light" ? colors.black : colors.white,
-      }}
-    >
-      <Tabs.Screen
+    <Stack>
+      <Stack.Screen
         name="index"
         options={{
           title: "My shots",
-          tabBarIcon: ({ color, size }) => (
-            <TableProperties strokeWidth={1.5} size={size} color={color} />
-          ),
+          ...largeHeader,
         }}
       />
 
-      <Tabs.Screen
+      <Stack.Screen
         name="profile"
-        options={{
-          title: "Profile",
-          tabBarIcon: ({ color, size }) => (
-            <UserIcon strokeWidth={1.5} size={size} color={color} />
-          ),
-        }}
+        options={{ title: "My profile", ...largeHeader }}
       />
-    </Tabs>
+
+      <Stack.Screen
+        name="new-shot/dose"
+        options={{ title: "Dose", ...newShotScreen }}
+      />
+
+      <Stack.Screen
+        name="new-shot/yield-amount"
+        options={{ title: "Yield", ...newShotScreen }}
+      />
+
+      <Stack.Screen
+        name="new-shot/duration"
+        options={{ title: "Duration", ...newShotScreen }}
+      />
+
+      <Stack.Screen
+        name="new-shot/grind-setting"
+        options={{ title: "Grind setting", ...newShotScreen }}
+      />
+
+      <Stack.Screen
+        name="new-shot/coffee"
+        options={{ title: "Coffee", ...newShotScreen }}
+      />
+    </Stack>
   );
 }

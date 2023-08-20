@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import {
   RefreshControl,
   ScrollViewProps,
-  Text,
   useColorScheme,
+  View,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import colors from "tailwindcss/colors";
 
 interface ScreenProps extends ScrollViewProps {
   onRefresh?: () => Promise<any>;
+  footer?: ReactNode;
   heading: string;
 }
 
@@ -17,6 +18,7 @@ export default function Screen({
   onRefresh,
   heading,
   children,
+  footer,
   ...rest
 }: ScreenProps) {
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -38,34 +40,32 @@ export default function Screen({
   }
 
   return (
-    <KeyboardAwareScrollView
-      {...rest}
-      showsVerticalScrollIndicator={false}
-      refreshControl={
-        onRefresh ? (
-          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-        ) : undefined
-      }
-      contentInsetAdjustmentBehavior="automatic"
-      style={{
-        backgroundColor:
-          colorScheme === "light" ? colors.stone[200] : colors.stone[950],
-      }}
-      contentContainerStyle={{
-        paddingBottom: 50,
-        paddingRight: 20,
-        paddingLeft: 20,
-        paddingTop: 50,
-      }}
-    >
-      <Text
-        className="mb-6 font-medium dark:text-white"
-        style={{ fontSize: 46 }}
+    <View className="flex-1">
+      <KeyboardAwareScrollView
+        {...rest}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          onRefresh ? (
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          ) : undefined
+        }
+        contentInsetAdjustmentBehavior="automatic"
+        style={{
+          backgroundColor:
+            colorScheme === "light" ? colors.stone[100] : colors.stone[950],
+          flex: 1,
+        }}
+        contentContainerStyle={{
+          paddingBottom: 50,
+          paddingRight: 20,
+          paddingLeft: 20,
+          paddingTop: 20,
+        }}
       >
-        {heading}
-      </Text>
+        {children}
+      </KeyboardAwareScrollView>
 
-      {children}
-    </KeyboardAwareScrollView>
+      {footer}
+    </View>
   );
 }

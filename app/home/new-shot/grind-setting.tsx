@@ -1,4 +1,4 @@
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { CheckIcon } from "lucide-react-native";
 import { useState } from "react";
 import {
@@ -11,8 +11,8 @@ import {
   View,
 } from "react-native";
 
-import Button from "../../components/button";
-import { trpc } from "../../lib/trpc";
+import Button from "../../../components/button";
+import { trpc } from "../../../lib/trpc";
 
 export default function NewShot() {
   const [value, setValue] = useState("");
@@ -63,8 +63,6 @@ export default function NewShot() {
 
   return (
     <>
-      <Stack.Screen options={{ headerTitle: "Grind setting" }} />
-
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
@@ -88,15 +86,9 @@ export default function NewShot() {
       </KeyboardAvoidingView>
 
       <InputAccessoryView nativeID="cta">
-        <View className="px-4 pb-4">
-          <Button
-            icon={CheckIcon}
-            onPress={handleCreateShot}
-            loading={isLoading}
-          >
-            Register shot
-          </Button>
-        </View>
+        <Button icon={CheckIcon} onPress={handleCreateShot} loading={isLoading}>
+          Register shot
+        </Button>
       </InputAccessoryView>
     </>
   );

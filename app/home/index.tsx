@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
-import { Link, useRouter } from "expo-router";
+import { Link, Stack } from "expo-router";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -11,11 +11,12 @@ import {
 } from "lucide-react-native";
 import {
   ActivityIndicator,
+  Button,
   Text,
   TouchableOpacity,
   View,
-  useColorScheme,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Card from "../../components/card";
 import Screen from "../../components/screen";
@@ -23,29 +24,51 @@ import ShotDataRow from "../../components/shot-data-row";
 import { trpc } from "../../lib/trpc";
 
 export default function Home() {
-  const colorScheme = useColorScheme();
-  const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   const { data, isLoading, refetch } = trpc.shot.list.useQuery();
 
   return (
     <>
-      <TouchableOpacity
-        className="absolute z-10 items-center justify-center bg-gray-900 dark:bg-white rounded-full w-[72] h-[72] bottom-[22] right-[17] shadow-lg shadow-gray-500 dark:shadow-gray-950"
-        onPressIn={() => {
-          impactAsync(ImpactFeedbackStyle.Medium);
-          router.push("/(new-shot)/dose");
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <Link asChild href="/home/profile">
+              <TouchableOpacity className="items-center justify-center w-10 h-10 bg-gray-200 rounded-full dark:bg-gray-800">
+                <Text className="text-base dark:text-gray-300">AG</Text>
+              </TouchableOpacity>
+            </Link>
+          ),
         }}
-      >
-        <PlusIcon
-          size={36}
-          stroke={colorScheme === "light" ? "white" : "black"}
-        />
-      </TouchableOpacity>
+      />
 
-      <Screen heading="My shots" onRefresh={refetch}>
+      <Screen
+        heading="My shots"
+        onRefresh={refetch}
+        footer={
+          <View
+            className="absolute px-5"
+            style={{
+              bottom: insets.bottom || 20,
+              right: insets.right,
+              left: insets.left,
+            }}
+          >
+            <Link href="/home/new-shot/dose" asChild>
+              <TouchableOpacity
+                className="absolute z-10 items-center justify-center bg-green-600 dark:bg-emerald-700 rounded-full w-[72] h-[72] bottom-[22] right-[17] shadow-xl shadow-emerald-600 dark:shadow-gray-950"
+                onPressIn={() => {
+                  impactAsync(ImpactFeedbackStyle.Medium);
+                }}
+              >
+                <PlusIcon size={40} stroke="white" strokeWidth={1.5} />
+              </TouchableOpacity>
+            </Link>
+          </View>
+        }
+      >
         {data ? (
-          <View className="space-y-4">
+          <View className="space-y-[18]">
             {data?.map((shot, i) => (
               <Link key={shot.id} asChild href="/profile">
                 <TouchableOpacity>
@@ -56,15 +79,15 @@ export default function Home() {
                       </Text>
 
                       <View className="flex-row items-center">
-                        <Text className="text-base text-gray-500 dark:text-stone-500">
+                        <Text className="text-base text-gray-500 dark:text-gray-500">
                           Shot #{data.length - i}
                         </Text>
 
-                        <Text className="ml-2 mr-1.5 text-base text-gray-400 dark:text-stone-600">
+                        <Text className="ml-2 mr-1.5 text-base text-gray-400 dark:text-gray-600">
                           •
                         </Text>
 
-                        <Text className="text-base text-gray-500 dark:text-stone-500">
+                        <Text className="text-base text-gray-500 dark:text-gray-500">
                           {format(new Date(shot.createdAt), "HH:mm")}
                         </Text>
                       </View>
