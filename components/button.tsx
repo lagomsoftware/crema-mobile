@@ -39,8 +39,8 @@ export default function Button({
         }
       }}
       className={classNames(
-        "flex-row items-center justify-between px-6 py-4 rounded-full space-x-2",
-        { default: "bg-gray-900 dark:bg-white", secondary: "" }[variant],
+        "flex-row items-center justify-between px-6 py-[18] space-x-2",
+        { default: "bg-gray-900 dark:bg-white", secondary: "" }[variant]
       )}
     >
       <View className={Icon ? "w-[22]" : loading ? "w-[22]" : undefined} />
@@ -51,7 +51,7 @@ export default function Button({
           {
             default: "text-white dark:text-black",
             secondary: "dark:text-white",
-          }[variant],
+          }[variant]
         )}
       >
         {children}

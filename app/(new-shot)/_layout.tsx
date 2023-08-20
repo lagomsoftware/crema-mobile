@@ -20,26 +20,26 @@ export default function NewShotLayout() {
             backgroundColor:
               colorScheme === "light" ? colors.stone[100] : colors.stone[900],
           },
-          headerRight: () => (
-            <TouchableOpacity
-              className="items-center justify-center w-8 h-8 bg-gray-200 rounded-full dark:bg-gray-700"
-              hitSlop={50}
-              onPress={() => {
-                selectionAsync();
-                router.push("/home");
-              }}
-            >
-              <XIcon
-                stroke={
-                  colorScheme === "light"
-                    ? colors.stone[600]
-                    : colors.stone[400]
-                }
-                strokeWidth={2.5}
-                size={19}
-              />
-            </TouchableOpacity>
-          ),
+          // headerRight: () => (
+          //   <TouchableOpacity
+          //     className="items-center justify-center w-8 h-8 bg-gray-200 rounded-full dark:bg-gray-700"
+          //     hitSlop={50}
+          //     onPress={() => {
+          //       selectionAsync();
+          //       router.push("/home");
+          //     }}
+          //   >
+          //     <XIcon
+          //       stroke={
+          //         colorScheme === "light"
+          //           ? colors.stone[600]
+          //           : colors.stone[400]
+          //       }
+          //       strokeWidth={2.5}
+          //       size={19}
+          //     />
+          //   </TouchableOpacity>
+          // ),
         }}
       />
 
