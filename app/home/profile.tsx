@@ -10,6 +10,7 @@ export default function Profile() {
   return (
     <Screen heading="My profile">
       <Button
+        shape="pill"
         onPress={() => {
           setToken(undefined);
         }}

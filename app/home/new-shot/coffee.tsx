@@ -29,7 +29,7 @@ export default function NewShot() {
   const insets = useSafeAreaInsets();
 
   return (
-    <View className="flex-1 px-6 pt-6 pb-4">
+    <View className="flex-1 px-6">
       <View className="justify-center flex-1">
         <Text className="text-3xl dark:text-white">Coffee</Text>
 

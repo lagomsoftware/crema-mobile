@@ -28,7 +28,7 @@ function Button(
     style,
     ...rest
   }: ButtonProps,
-  ref: Ref<TouchableOpacity>
+  ref: Ref<TouchableOpacity>,
 ) {
   return (
     <TouchableOpacity
@@ -45,7 +45,7 @@ function Button(
       className={classNames(
         "flex-row items-center justify-between px-6 py-4 space-x-2",
         { default: "bg-green-600 dark:bg-emerald-700", secondary: "" }[variant],
-        { square: "rounded-none", pill: "rounded-full" }[shape]
+        { square: "rounded-none", pill: "rounded-full" }[shape],
       )}
     >
       <View className={Icon ? "w-[22]" : loading ? "w-[22]" : undefined} />
@@ -56,7 +56,7 @@ function Button(
           {
             default: "text-white",
             secondary: "dark:text-white",
-          }[variant]
+          }[variant],
         )}
       >
         {children}

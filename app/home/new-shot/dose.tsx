@@ -46,7 +46,7 @@ export default function NewShot() {
               onChangeText={setValue}
               placeholder="18"
               value={value}
-              // autoFocus
+              autoFocus
             />
 
             <Text className="text-[125px] font-light text-gray-400 dark:text-gray-700">
