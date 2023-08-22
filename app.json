@@ -7,11 +7,14 @@
     "ios": {
       "config": {
         "usesNonExemptEncryption": false
-      }
+      },
+      "supportsTablet": false,
+      "bundleIdentifier": "com.albingroen.crema"
     },
-    "name": "crema",
+    "name": "Crema",
     "slug": "crema",
     "plugins": ["expo-router"],
-    "userInterfaceStyle": "automatic"
+    "userInterfaceStyle": "automatic",
+    "orientation": "portrait"
   }
 }
