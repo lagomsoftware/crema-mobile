@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { ArrowRightIcon } from "lucide-react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   InputAccessoryView,
   KeyboardAvoidingView,
@@ -13,12 +13,22 @@ import {
 import colors from "tailwindcss/colors";
 
 import Button from "../../../components/button";
+import { trpc } from "../../../lib/trpc";
 
 export default function NewShot() {
   const colorScheme = useColorScheme();
 
   const [value, setValue] = useState("");
   const router = useRouter();
+
+  // Server state
+  const { data: previousDose } = trpc.shot.listDoses.useQuery();
+
+  useEffect(() => {
+    if (previousDose) {
+      setValue(String(previousDose));
+    }
+  }, [previousDose]);
 
   return (
     <>
