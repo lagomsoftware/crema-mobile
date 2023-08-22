@@ -9,7 +9,17 @@ import {
   SettingsIcon,
   TimerIcon,
 } from "lucide-react-native";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
+import colors from "tailwindcss/colors";
 
 import Card from "../../components/card";
 import Screen from "../../components/screen";
@@ -19,30 +29,56 @@ import { useRefetchOnFocus } from "../../lib/utils";
 
 export default function Home() {
   const { data, isLoading, refetch } = trpc.shot.list.useQuery();
+  const colorScheme = useColorScheme();
 
   useRefetchOnFocus(refetch);
 
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+
+  // Handlers
+  async function handleRefresh() {
+    setRefreshing(true);
+
+    await new Promise((res) => {
+      setTimeout(() => {
+        res(true);
+      }, 1000);
+    });
+
+    await refetch();
+
+    setRefreshing(false);
+  }
+
   return (
-    <Screen
-      heading="My shots"
-      onRefresh={refetch}
-      footer={
-        <Link href="/home/new-shot/dose" asChild>
-          <TouchableOpacity
-            className="absolute z-10 items-center justify-center bg-green-600 dark:bg-emerald-700 rounded-full w-[72] h-[72] bottom-[22] right-[17] shadow-xl shadow-emerald-600/50 dark:shadow-gray-950"
-            onPressIn={() => {
-              impactAsync(ImpactFeedbackStyle.Medium);
-            }}
-          >
-            <PlusIcon size={40} stroke="white" strokeWidth={1.5} />
-          </TouchableOpacity>
-        </Link>
-      }
+    <SafeAreaView
+      className="flex-1"
+      style={{
+        backgroundColor:
+          colorScheme === "light" ? colors.stone[100] : colors.stone[950],
+      }}
     >
+      <Link href="/home/new-shot/dose" asChild>
+        <TouchableOpacity
+          className="absolute z-10 items-center justify-center bg-green-600 dark:bg-emerald-700 rounded-full w-[72] h-[72] bottom-[22] right-[17] shadow-xl shadow-emerald-600/50 dark:shadow-gray-950"
+          onPressIn={() => {
+            impactAsync(ImpactFeedbackStyle.Medium);
+          }}
+        >
+          <PlusIcon size={40} stroke="white" strokeWidth={1.5} />
+        </TouchableOpacity>
+      </Link>
+
       {data ? (
-        <View className="space-y-[18]">
-          {data?.map((shot, i) => (
-            <Link key={shot.id} asChild href="/profile">
+        <FlatList
+          data={data}
+          keyExtractor={(shot) => shot.id}
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
+          renderItem={({ item: shot, index: i }) => (
+            <Link key={shot.id} asChild href="/profile" className="mb-5">
               <TouchableOpacity>
                 <Card>
                   <View className="flex-row justify-between align-baseline">
@@ -106,16 +142,21 @@ export default function Home() {
                 </Card>
               </TouchableOpacity>
             </Link>
-          ))}
-        </View>
+          )}
+        />
       ) : isLoading ? (
-        <ActivityIndicator size="large" />
+        <View className="p-5">
+          <ActivityIndicator size="large" />
+        </View>
       ) : (
-        <Text className="text-base text-red-600 dark:text-rose-400">
-          Oh no! We couldn't retrieve your shot history. Try refreshing and see
-          if it helps. If the issue continues, please get in touch with us.
-        </Text>
+        <View className="p-5">
+          <Text className="text-base text-red-600 dark:text-rose-400">
+            Oh no! We couldn't retrieve your shot history. Try refreshing and
+            see if it helps. If the issue continues, please get in touch with
+            us.
+          </Text>
+        </View>
       )}
-    </Screen>
+    </SafeAreaView>
   );
 }
