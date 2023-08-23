@@ -22,7 +22,6 @@ import {
 import colors from "tailwindcss/colors";
 
 import Card from "../../components/card";
-import Screen from "../../components/screen";
 import ShotDataRow from "../../components/shot-data-row";
 import { trpc } from "../../lib/trpc";
 import { useRefetchOnFocus } from "../../lib/utils";

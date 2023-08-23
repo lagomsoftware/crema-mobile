@@ -31,7 +31,10 @@ export default function Layout() {
           headerLeft: () => (
             <Link href="/home" asChild>
               <TouchableOpacity>
-                <ChevronLeftIcon size={34} color={colors.white} />
+                <ChevronLeftIcon
+                  size={34}
+                  color={colorScheme === "light" ? colors.black : colors.white}
+                />
               </TouchableOpacity>
             </Link>
           ),
