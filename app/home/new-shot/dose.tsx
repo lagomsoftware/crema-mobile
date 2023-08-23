@@ -1,6 +1,6 @@
-import { useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { ArrowRightIcon } from "lucide-react-native";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   InputAccessoryView,
   KeyboardAvoidingView,
@@ -13,7 +13,6 @@ import {
 import colors from "tailwindcss/colors";
 
 import Button from "../../../components/button";
-import { trpc } from "../../../lib/trpc";
 
 export default function NewShot() {
   const colorScheme = useColorScheme();
@@ -21,14 +20,16 @@ export default function NewShot() {
   const [value, setValue] = useState("");
   const router = useRouter();
 
-  // Server state
-  const { data: previousDose } = trpc.shot.listDoses.useQuery();
+  // URL state
+  const { initialDose } = useLocalSearchParams();
 
-  useEffect(() => {
-    if (previousDose) {
-      setValue(String(previousDose));
-    }
-  }, [previousDose]);
+  useFocusEffect(
+    useCallback(() => {
+      if (initialDose) {
+        setValue((v) => v || (initialDose as string));
+      }
+    }, [initialDose]),
+  );
 
   return (
     <>
@@ -46,7 +47,7 @@ export default function NewShot() {
                 ]
               }
               selectionColor={
-                { light: colors.green[500], dark: colors.emerald[600] }[
+                { light: colors.emerald[500], dark: colors.emerald[600] }[
                   colorScheme
                 ]
               }

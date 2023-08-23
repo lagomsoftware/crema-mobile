@@ -1,3 +1,4 @@
+import { LogOutIcon } from "lucide-react-native";
 import { useContext } from "react";
 
 import Button from "../../components/button";
@@ -11,6 +12,8 @@ export default function Profile() {
     <Screen heading="My profile">
       <Button
         shape="pill"
+        variant="secondary"
+        icon={LogOutIcon}
         onPress={() => {
           setToken(undefined);
         }}

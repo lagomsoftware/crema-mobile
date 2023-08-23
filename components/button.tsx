@@ -44,7 +44,10 @@ function Button(
       }}
       className={classNames(
         "flex-row items-center justify-between px-6 py-4 space-x-2",
-        { default: "bg-green-600 dark:bg-emerald-700", secondary: "" }[variant],
+        {
+          default: "bg-emerald-700 dark:bg-emerald-700",
+          secondary: "dark:bg-gray-800",
+        }[variant],
         { square: "rounded-none", pill: "rounded-full" }[shape],
       )}
     >

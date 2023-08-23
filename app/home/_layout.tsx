@@ -1,8 +1,10 @@
 import { Tabs } from "expo-router";
-import { PlusIcon, TableProperties, UserIcon } from "lucide-react-native";
+import { HomeIcon, PlusIcon } from "lucide-react-native";
 import React from "react";
-import { useColorScheme } from "react-native";
+import { Text, useColorScheme, View } from "react-native";
 import colors from "tailwindcss/colors";
+
+import classNames from "../../lib/classNames";
 
 export default function HomeLayout() {
   const colorScheme = useColorScheme();
@@ -26,9 +28,11 @@ export default function HomeLayout() {
             dark: colors.stone[800],
           }[colorScheme],
           borderTopColor: {
-            light: colors.white,
-            dark: colors.stone[600],
+            light: colors.stone[400],
+            dark: colors.stone[500],
           }[colorScheme],
+          paddingBottom: 22,
+          height: 85,
         },
         tabBarActiveTintColor: { light: colors.black, dark: colors.white }[
           colorScheme
@@ -37,6 +41,7 @@ export default function HomeLayout() {
           light: colors.stone[500],
           dark: colors.stone[400],
         }[colorScheme],
+        tabBarShowLabel: false,
       }}
     >
       <Tabs.Screen
@@ -44,7 +49,7 @@ export default function HomeLayout() {
         options={{
           title: "My shots",
           ...largeHeader,
-          tabBarIcon: (props) => <TableProperties {...props} />,
+          tabBarIcon: (props) => <HomeIcon {...props} size={28} />,
         }}
       />
 
@@ -53,7 +58,7 @@ export default function HomeLayout() {
         options={{
           title: "New shot",
           headerShown: false,
-          tabBarIcon: (props) => <PlusIcon {...props} />,
+          tabBarIcon: (props) => <PlusIcon {...props} size={28} />,
         }}
       />
 
@@ -62,7 +67,23 @@ export default function HomeLayout() {
         options={{
           title: "My profile",
           ...largeHeader,
-          tabBarIcon: (props) => <UserIcon {...props} />,
+          tabBarIcon: ({ focused, color }) => (
+            <View
+              className={classNames(
+                "items-center justify-center rounded-full w-9 h-9",
+                focused
+                  ? "bg-gray-300 dark:bg-gray-600"
+                  : "bg-gray-200 dark:bg-gray-700"
+              )}
+            >
+              <Text
+                className="text-lg font-medium dark:text-white"
+                style={{ color }}
+              >
+                A
+              </Text>
+            </View>
+          ),
         }}
       />
     </Tabs>

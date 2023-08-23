@@ -41,7 +41,7 @@ export default function NewShot() {
                 ]
               }
               selectionColor={
-                { light: colors.green[500], dark: colors.emerald[600] }[
+                { light: colors.emerald[500], dark: colors.emerald[600] }[
                   colorScheme
                 ]
               }

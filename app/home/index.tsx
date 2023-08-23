@@ -57,9 +57,12 @@ export default function Home() {
           colorScheme === "light" ? colors.stone[100] : colors.stone[950],
       }}
     >
-      <Link href="/home/new-shot/dose" asChild>
+      <Link
+        href={`/home/new-shot/dose?initialDose=${data?.[0]?.dose || ""}`}
+        asChild
+      >
         <TouchableOpacity
-          className="absolute z-10 items-center justify-center bg-green-600 dark:bg-emerald-700 rounded-full w-[72] h-[72] bottom-[22] right-[17] shadow-xl shadow-emerald-600/50 dark:shadow-gray-950"
+          className="absolute z-10 items-center justify-center bg-emerald-700 dark:bg-emerald-700 rounded-full w-[72] h-[72] bottom-[22] right-[17] shadow-xl shadow-emerald-600/50 dark:shadow-gray-950"
           onPressIn={() => {
             impactAsync(ImpactFeedbackStyle.Medium);
           }}
