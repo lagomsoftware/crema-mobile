@@ -9,8 +9,7 @@ export const trpc = createTRPCReact<AppRouter>();
 export const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      // url: "https://crema-api.onrender.com",
-      url: "http://192.168.0.106:1337",
+      url: "https://crema-api.onrender.com",
       async headers() {
         const token = await getToken();
 
