@@ -11,12 +11,10 @@ import colors from "tailwindcss/colors";
 interface ScreenProps extends ScrollViewProps {
   onRefresh?: () => Promise<any>;
   footer?: ReactNode;
-  heading: string;
 }
 
 export default function Screen({
   onRefresh,
-  heading,
   children,
   footer,
   ...rest

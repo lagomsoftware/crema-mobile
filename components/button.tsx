@@ -21,14 +21,14 @@ interface ButtonProps extends TouchableOpacityProps {
 function Button(
   {
     variant = "default",
-    shape = "square",
+    shape = "pill",
     icon: Icon,
     children,
     loading,
     style,
     ...rest
   }: ButtonProps,
-  ref: Ref<TouchableOpacity>,
+  ref: Ref<TouchableOpacity>
 ) {
   return (
     <TouchableOpacity
@@ -46,9 +46,9 @@ function Button(
         "flex-row items-center justify-between px-6 py-4 space-x-2",
         {
           default: "bg-emerald-700 dark:bg-emerald-700",
-          secondary: "dark:bg-gray-800",
+          secondary: "bg-gray-100 dark:bg-gray-800",
         }[variant],
-        { square: "rounded-none", pill: "rounded-full" }[shape],
+        { square: "rounded-none", pill: "rounded-full" }[shape]
       )}
     >
       <View className={Icon ? "w-[22]" : loading ? "w-[22]" : undefined} />
@@ -59,7 +59,7 @@ function Button(
           {
             default: "text-white",
             secondary: "dark:text-white",
-          }[variant],
+          }[variant]
         )}
       >
         {children}

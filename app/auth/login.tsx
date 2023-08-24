@@ -100,7 +100,6 @@ export default function Login() {
                 loading={isSubmitting}
                 className="mt-10"
                 icon={ArrowRight}
-                shape="pill"
               >
                 Log in
               </Button>

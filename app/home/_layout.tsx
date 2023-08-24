@@ -57,7 +57,7 @@ export default function HomeLayout() {
         name="new-shot"
         options={{
           title: "New shot",
-          headerShown: false,
+          ...largeHeader,
           tabBarIcon: (props) => <PlusIcon {...props} size={28} />,
         }}
       />
@@ -73,7 +73,7 @@ export default function HomeLayout() {
                 "items-center justify-center rounded-full w-9 h-9",
                 focused
                   ? "bg-gray-300 dark:bg-gray-600"
-                  : "bg-gray-200 dark:bg-gray-700"
+                  : "bg-gray-200 dark:bg-gray-700",
               )}
             >
               <Text

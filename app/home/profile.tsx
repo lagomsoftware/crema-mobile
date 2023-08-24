@@ -9,9 +9,8 @@ export default function Profile() {
   const { setToken } = useContext(AuthContext);
 
   return (
-    <Screen heading="My profile">
+    <Screen>
       <Button
-        shape="pill"
         variant="secondary"
         icon={LogOutIcon}
         onPress={() => {

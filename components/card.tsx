@@ -1,8 +1,8 @@
-import { ViewProps, useColorScheme } from "react-native";
+import { ViewProps, useColorScheme, View } from "react-native";
 import { SquircleView } from "react-native-figma-squircle";
 import colors from "tailwindcss/colors";
 
-export default function Card({ children, ...rest }: ViewProps) {
+function Card({ children, ...rest }: ViewProps) {
   const colorScheme = useColorScheme();
 
   return (
@@ -13,9 +13,21 @@ export default function Card({ children, ...rest }: ViewProps) {
         cornerSmoothing: 0.7,
         fillColor: colorScheme === "light" ? colors.white : colors.stone[900],
       }}
-      className="p-[18] shadow-md shadow-gray-400/20 dark:shadow-none"
+      className="shadow-md shadow-gray-400/20 dark:shadow-none"
     >
       {children}
     </SquircleView>
   );
 }
+
+interface CardContentProps extends ViewProps {}
+
+Card.Content = ({ children, ...rest }: CardContentProps) => {
+  return (
+    <View className="p-[18]" {...rest}>
+      {children}
+    </View>
+  );
+};
+
+export default Card;
