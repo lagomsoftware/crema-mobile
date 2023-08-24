@@ -1,10 +1,14 @@
 import Slider from "@react-native-community/slider";
-import { addSeconds } from "date-fns";
 import { selectionAsync } from "expo-haptics";
 import { Link } from "expo-router";
-import { Formik, useFormik } from "formik";
-import { ChevronDownIcon } from "lucide-react-native";
-import { forwardRef, Ref, useEffect, useRef, useState } from "react";
+import { useFormik } from "formik";
+import {
+  ChevronDownIcon,
+  TimerIcon,
+  TimerOff,
+  TimerReset,
+} from "lucide-react-native";
+import { forwardRef, Ref, useRef, useState } from "react";
 import {
   InputAccessoryView,
   Text,
@@ -17,9 +21,12 @@ import {
 import { useStopwatch } from "react-timer-hook";
 import colors from "tailwindcss/colors";
 
+import Button from "../../components/button";
 import Card from "../../components/card";
+import Divider from "../../components/divider";
 import Screen from "../../components/screen";
 import { trpc } from "../../lib/trpc";
+import { formatTimer } from "../../lib/utils";
 
 export default function NewShot() {
   const colorScheme = useColorScheme();
@@ -35,17 +42,7 @@ export default function NewShot() {
     "dose" | "yield" | "duration" | "grindSetting"
   >("dose");
 
-  const {
-    totalSeconds,
-    seconds,
-    minutes,
-    hours,
-    days,
-    isRunning,
-    start,
-    pause,
-    reset,
-  } = useStopwatch();
+  const { totalSeconds, isRunning, start, pause, reset } = useStopwatch();
 
   // Server state
   trpc.shot.listCoffees.useQuery();
@@ -61,22 +58,13 @@ export default function NewShot() {
     onSubmit: () => {},
   });
 
-  // Side-effects
-  useEffect(() => {
-    if (isRunning) {
-      setFieldValue("duration", totalSeconds.toString());
-    }
-  }, [totalSeconds, isRunning]);
-
-  const [foo, setFoo] = useState<Date>();
-
   return (
     <>
       <Screen>
         <View className="flex-col space-y-5">
-          <Card divider>
+          <Card>
             <Input
-              // autoFocus
+              autoFocus
               label="Dose"
               placeholder="18"
               inputAccessoryViewID="next"
@@ -88,6 +76,8 @@ export default function NewShot() {
                 setFocusedInput("dose");
               }}
             />
+
+            <Divider />
 
             <Input
               label="Yield"
@@ -102,6 +92,8 @@ export default function NewShot() {
               }}
             />
 
+            <Divider />
+
             <Input
               label="Duration"
               // editable={!isRunning}
@@ -109,33 +101,14 @@ export default function NewShot() {
               keyboardType="number-pad"
               value={values.duration}
               ref={durationInput}
-              onChangeText={(newDuration) => {
-                if (!isRunning) {
-                  setFieldValue("duration", newDuration);
-                }
-              }}
-              inputAccessoryViewID="next-and-timer"
+              onChangeText={handleChange("duration")}
+              inputAccessoryViewID="next"
               onFocus={() => {
                 setFocusedInput("duration");
               }}
-            >
-              {/* <TouchableOpacity */}
-              {/*   hitSlop={20} */}
-              {/*   onPress={() => { */}
-              {/*     selectionAsync(); */}
-              {/*     timerSheetRef.current?.expand(); */}
-              {/*   }} */}
-              {/* > */}
-              {/*   <TimerIcon */}
-              {/*     size={22} */}
-              {/*     color={ */}
-              {/*       { light: colors.stone[500], dark: colors.stone[600] }[ */}
-              {/*         colorScheme */}
-              {/*       ] */}
-              {/*     } */}
-              {/*   /> */}
-              {/* </TouchableOpacity> */}
-            </Input>
+            />
+
+            <Divider />
 
             <Input
               label="Grind"
@@ -210,88 +183,85 @@ export default function NewShot() {
       </Screen>
 
       <InputAccessoryView nativeID="next">
-        <View className="flex-row justify-end p-3.5 dark:bg-gray-800">
-          <TouchableOpacity
-            className="px-6 py-2.5 rounded-full bg-emerald-700"
-            onPressIn={selectionAsync}
-            onPress={() => {
-              switch (focusedInput) {
-                case "dose":
-                  yieldInput.current?.focus();
-                  break;
-                case "yield":
-                  durationInput.current?.focus();
-                  break;
-                case "duration":
-                  grindSettingInput.current?.focus();
-                  break;
-              }
-            }}
-          >
-            <Text className="text-base font-medium text-white">Next</Text>
-          </TouchableOpacity>
-        </View>
-      </InputAccessoryView>
-
-      <InputAccessoryView nativeID="next-and-timer">
-        <View className="flex-row justify-end p-3.5 dark:bg-gray-800 space-x-3">
-          {isRunning ? (
-            <TouchableOpacity
-              className="px-6 py-2.5 rounded-full bg-gray-700"
-              onPressIn={selectionAsync}
-              onPress={() => {
-                pause();
-                // reset(undefined, false);
-                setFoo(
-                  addSeconds(
-                    new Date(),
-                    +values.duration.replaceAll(",", ".") + 1
-                  )
-                );
-              }}
+        <View className="flex-row justify-between items-center p-3.5 bg-white dark:bg-gray-800 space-x-3 shadow-2xl">
+          {focusedInput === "duration" ? (
+            <Text
+              className="text-lg dark:text-white"
+              style={{ fontVariant: ["tabular-nums"] }}
             >
-              <Text className="text-base font-medium text-white">
-                Stop timer
-              </Text>
-            </TouchableOpacity>
+              {isRunning
+                ? formatTimer(totalSeconds)
+                : totalSeconds
+                ? formatTimer(totalSeconds)
+                : ""}
+            </Text>
           ) : (
-            <>
-              {values.duration && (
-                <TouchableOpacity
-                  className="px-6 py-2.5 rounded-full bg-gray-700"
-                  onPressIn={selectionAsync}
-                  onPress={() => {
-                    setFieldValue("duration", "");
-                    reset(undefined, false);
-                  }}
-                >
-                  <Text className="text-base font-medium text-white">
+            <View />
+          )}
+
+          <View className="flex-row items-center space-x-3">
+            {focusedInput === "duration" ? (
+              <>
+                {isRunning ? (
+                  <Button
+                    size="small"
+                    variant="secondary"
+                    icon={TimerOff}
+                    onPress={() => {
+                      pause();
+                    }}
+                  >
+                    Stop
+                  </Button>
+                ) : totalSeconds ? (
+                  <Button
+                    size="small"
+                    variant="secondary"
+                    icon={TimerReset}
+                    onPress={() => {
+                      reset(undefined, false);
+                    }}
+                  >
                     Reset
-                  </Text>
-                </TouchableOpacity>
-              )}
+                  </Button>
+                ) : (
+                  <Button
+                    size="small"
+                    variant="secondary"
+                    icon={TimerIcon}
+                    onPress={() => {
+                      start();
+                    }}
+                  >
+                    Start timer
+                  </Button>
+                )}
 
-              <TouchableOpacity
-                className="px-6 py-2.5 rounded-full bg-gray-700"
-                onPressIn={selectionAsync}
-                onPress={() => {
-                  if (values.duration) {
-                    reset(foo);
-                  } else if (totalSeconds) {
-                    reset();
-                  } else {
-                    start();
-                  }
-                }}
-              >
-                <Text className="text-base font-medium text-white">
-                  Start timer
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                className="px-6 py-2.5 rounded-full bg-emerald-700"
-                onPressIn={selectionAsync}
+                {totalSeconds && !isRunning ? (
+                  <Button
+                    size="small"
+                    onPress={() => {
+                      setFieldValue("duration", totalSeconds.toString());
+                      grindSettingInput.current?.focus();
+                      reset(undefined, false);
+                    }}
+                  >
+                    Apply & Next
+                  </Button>
+                ) : !totalSeconds && !isRunning ? (
+                  <Button
+                    size="small"
+                    onPress={() => {
+                      grindSettingInput.current?.focus();
+                    }}
+                  >
+                    Next
+                  </Button>
+                ) : null}
+              </>
+            ) : (
+              <Button
+                size="small"
                 onPress={() => {
                   switch (focusedInput) {
                     case "dose":
@@ -300,16 +270,13 @@ export default function NewShot() {
                     case "yield":
                       durationInput.current?.focus();
                       break;
-                    case "duration":
-                      grindSettingInput.current?.focus();
-                      break;
                   }
                 }}
               >
-                <Text className="text-base font-medium text-white">Next</Text>
-              </TouchableOpacity>
-            </>
-          )}
+                Next
+              </Button>
+            )}
+          </View>
         </View>
       </InputAccessoryView>
     </>
@@ -325,7 +292,7 @@ const Input = forwardRef(
     const colorScheme = useColorScheme();
 
     return (
-      <Card.Content className="p-2.5 pl-4" style={style}>
+      <Card.Content className="p-2.5 pl-4">
         <View className="flex-row items-center justify-between space-x-4">
           <View className="flex-row items-center justify-between flex-1 max-w-[100]">
             <Text className="text-lg dark:text-white">{label}</Text>

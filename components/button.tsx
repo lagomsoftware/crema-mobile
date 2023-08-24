@@ -9,11 +9,13 @@ import {
   useColorScheme,
   View,
 } from "react-native";
+import colors from "tailwindcss/colors";
 
 import classNames from "../lib/classNames";
 
 interface ButtonProps extends TouchableOpacityProps {
   variant?: "default" | "secondary";
+  size?: "small" | "default";
   shape?: "square" | "pill";
   icon?: LucideIcon;
   loading?: boolean;
@@ -22,6 +24,7 @@ interface ButtonProps extends TouchableOpacityProps {
 function Button(
   {
     variant = "default",
+    size = "default",
     shape = "pill",
     icon: Icon,
     children,
@@ -29,7 +32,7 @@ function Button(
     style,
     ...rest
   }: ButtonProps,
-  ref: Ref<TouchableOpacity>
+  ref: Ref<TouchableOpacity>,
 ) {
   const colorScheme = useColorScheme();
 
@@ -46,23 +49,29 @@ function Button(
         }
       }}
       className={classNames(
-        "flex-row items-center justify-between px-6 py-4 space-x-2",
+        "flex-row items-center justify-between",
         {
           default: "bg-emerald-700 dark:bg-emerald-700",
-          secondary: "bg-gray-200 dark:bg-gray-800",
+          secondary: "bg-gray-100 dark:bg-gray-700",
         }[variant],
-        { square: "rounded-none", pill: "rounded-full" }[shape]
+        { square: "rounded-none", pill: "rounded-full" }[shape],
+        { default: "px-6 py-4 space-x-2", small: "px-5 py-2.5 space-x-2" }[
+          size
+        ],
       )}
     >
-      <View className={Icon ? "w-[22]" : loading ? "w-[22]" : undefined} />
+      {size === "default" && (loading || Icon) ? (
+        <View className={Icon ? "w-[22]" : loading ? "w-[22]" : undefined} />
+      ) : null}
 
       <Text
         className={classNames(
-          "flex-1 text-lg font-medium text-center",
+          "text-lg font-medium text-center",
           {
             default: "text-white",
             secondary: "dark:text-white",
-          }[variant]
+          }[variant],
+          { default: "text-lg", small: "text-base" }[size],
         )}
       >
         {children}
@@ -79,17 +88,17 @@ function Button(
         />
       ) : Icon ? (
         <Icon
-          size={24}
+          size={{ default: 24, small: 20 }[size]}
           color={
             {
               default: "white",
-              secondary: { light: "black", dark: "white" }[colorScheme],
+              secondary: { light: colors.stone[500], dark: colors.stone[300] }[
+                colorScheme
+              ],
             }[variant]
           }
         />
-      ) : (
-        <View />
-      )}
+      ) : null}
     </TouchableOpacity>
   );
 }

@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { Link, usePathname } from "expo-router";
+import { Link } from "expo-router";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -119,7 +119,7 @@ export default function Home() {
         </TouchableOpacity>
       </Link>
     ),
-    []
+    [],
   );
 
   return (
