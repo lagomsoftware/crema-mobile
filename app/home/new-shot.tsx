@@ -1,4 +1,4 @@
-import { Picker } from "@react-native-picker/picker";
+import Slider from "@react-native-community/slider";
 import { selectionAsync } from "expo-haptics";
 import { Formik } from "formik";
 import { ChevronDownIcon } from "lucide-react-native";
@@ -108,16 +108,38 @@ export default function NewShot() {
                   <View className="flex-row items-center justify-between">
                     <Text className="flex-1 text-lg">Coffee</Text>
 
-                    <TouchableOpacity className="flex-row items-center justify-between flex-1 h-10 px-2 bg-gray-100 rounded-lg">
-                      <Text className="w-4/5 text-lg" numberOfLines={1}>
-                        Mollbergs blandning lkfjdslkfjdslkjfdlskj
+                    <TouchableOpacity className="flex-row items-center justify-between flex-1 h-10 px-2">
+                      <Text
+                        className="w-4/5 text-lg text-gray-600 -translate-x-2"
+                        numberOfLines={1}
+                      >
+                        Mollbergs blandning
                       </Text>
+
                       <ChevronDownIcon
                         size={24}
                         color={colors.stone[400]}
                         className="translate-y-px"
                       />
                     </TouchableOpacity>
+                  </View>
+                </Card.Content>
+              </Card>
+
+              <Card>
+                <Card.Content className="p-2.5 px-4">
+                  <View className="flex-row items-center justify-between space-x-5">
+                    <Text className="text-lg">Sweetness</Text>
+
+                    <Slider
+                      step={1}
+                      style={{ flex: 1 }}
+                      minimumValue={0}
+                      maximumValue={10}
+                      minimumTrackTintColor={colors.emerald[600]}
+                      thumbTintColor={colors.emerald[600]}
+                      tapToSeek
+                    />
                   </View>
                 </Card.Content>
               </Card>
@@ -132,7 +154,6 @@ export default function NewShot() {
             className="px-6 py-2.5 rounded-full bg-emerald-700"
             onPressIn={selectionAsync}
             onPress={() => {
-              yieldInput.current?.focus();
               switch (focusedInput) {
                 case "dose":
                   yieldInput.current?.focus();

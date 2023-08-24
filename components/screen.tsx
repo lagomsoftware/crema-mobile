@@ -42,6 +42,7 @@ export default function Screen({
       <KeyboardAwareScrollView
         {...rest}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
         refreshControl={
           onRefresh ? (
             <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
