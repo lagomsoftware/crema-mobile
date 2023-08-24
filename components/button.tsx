@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableOpacityProps,
+  useColorScheme,
   View,
 } from "react-native";
 
@@ -30,6 +31,8 @@ function Button(
   }: ButtonProps,
   ref: Ref<TouchableOpacity>
 ) {
+  const colorScheme = useColorScheme();
+
   return (
     <TouchableOpacity
       {...rest}
@@ -46,7 +49,7 @@ function Button(
         "flex-row items-center justify-between px-6 py-4 space-x-2",
         {
           default: "bg-emerald-700 dark:bg-emerald-700",
-          secondary: "bg-gray-100 dark:bg-gray-800",
+          secondary: "bg-gray-200 dark:bg-gray-800",
         }[variant],
         { square: "rounded-none", pill: "rounded-full" }[shape]
       )}
@@ -66,9 +69,24 @@ function Button(
       </Text>
 
       {loading ? (
-        <ActivityIndicator color="white" />
+        <ActivityIndicator
+          color={
+            {
+              default: "white",
+              secondary: { light: "black", dark: "white" }[colorScheme],
+            }[variant]
+          }
+        />
       ) : Icon ? (
-        <Icon size={24} color="white" />
+        <Icon
+          size={24}
+          color={
+            {
+              default: "white",
+              secondary: { light: "black", dark: "white" }[colorScheme],
+            }[variant]
+          }
+        />
       ) : (
         <View />
       )}

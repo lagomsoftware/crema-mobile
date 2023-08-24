@@ -1,22 +1,22 @@
-import { ViewProps, useColorScheme, View } from "react-native";
-import { SquircleView } from "react-native-figma-squircle";
-import colors from "tailwindcss/colors";
+import { ViewProps, View } from "react-native";
 
-function Card({ children, ...rest }: ViewProps) {
-  const colorScheme = useColorScheme();
+import classNames from "../lib/classNames";
 
+interface CardProps extends ViewProps {
+  divider?: boolean;
+}
+
+function Card({ children, divider, ...rest }: CardProps) {
   return (
-    <SquircleView
+    <View
       {...rest}
-      squircleParams={{
-        cornerRadius: 10,
-        cornerSmoothing: 0.7,
-        fillColor: colorScheme === "light" ? colors.white : colors.stone[900],
-      }}
-      className="shadow-md shadow-gray-400/20 dark:shadow-none"
+      className={classNames(
+        "shadow-md shadow-gray-400/20 dark:shadow-none bg-white dark:bg-gray-900 rounded-[10px]",
+        divider && "divide-y divide-gray-100 dark:divide-gray-800"
+      )}
     >
       {children}
-    </SquircleView>
+    </View>
   );
 }
 
