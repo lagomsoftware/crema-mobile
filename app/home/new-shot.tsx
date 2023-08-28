@@ -25,6 +25,7 @@ import Button from "../../components/button";
 import Card from "../../components/card";
 import Divider from "../../components/divider";
 import Screen from "../../components/screen";
+import classNames from "../../lib/classNames";
 import { trpc } from "../../lib/trpc";
 import { formatTimer } from "../../lib/utils";
 
@@ -34,12 +35,13 @@ export default function NewShot() {
   // Refs
   const doseInput = useRef<TextInput>(null);
   const yieldInput = useRef<TextInput>(null);
+  const notesInput = useRef<TextInput>(null);
   const durationInput = useRef<TextInput>(null);
   const grindSettingInput = useRef<TextInput>(null);
 
   // Local state
   const [focusedInput, setFocusedInput] = useState<
-    "dose" | "yield" | "duration" | "grindSetting"
+    "dose" | "yield" | "duration" | "grindSetting" | "notes"
   >("dose");
 
   const { totalSeconds, isRunning, start, pause, reset } = useStopwatch();
@@ -51,6 +53,7 @@ export default function NewShot() {
     initialValues: {
       dose: "",
       yield: "",
+      notes: "",
       coffee: "",
       duration: "",
       grindSetting: "",
@@ -64,7 +67,7 @@ export default function NewShot() {
         <View className="flex-col space-y-5">
           <Card>
             <Input
-              autoFocus
+              // autoFocus
               label="Dose"
               placeholder="18"
               inputAccessoryViewID="next"
@@ -161,6 +164,21 @@ export default function NewShot() {
           </Card>
 
           <Card>
+            <Input
+              label="Notes"
+              placeholder="I noticed that..."
+              value={values.notes}
+              style={{ height: 200 }}
+              multiline
+              ref={notesInput}
+              onChangeText={handleChange("notes")}
+              onFocus={() => {
+                setFocusedInput("notes");
+              }}
+            />
+          </Card>
+
+          <Card>
             <Card.Content className="p-2.5 px-4">
               <View className="flex-row items-center justify-between space-x-4">
                 <Text className="text-lg dark:text-white flex-1 max-w-[100px]">
@@ -183,10 +201,10 @@ export default function NewShot() {
       </Screen>
 
       <InputAccessoryView nativeID="next">
-        <View className="flex-row justify-between items-center p-3.5 bg-white dark:bg-gray-800 space-x-3 shadow-2xl">
+        <View className="flex-row justify-between items-center p-3.5 pl-4 bg-white dark:bg-gray-800 space-x-3 shadow-2xl border-t border-gray-200 dark:border-gray-700">
           {focusedInput === "duration" ? (
             <Text
-              className="text-lg dark:text-white"
+              className="text-xl dark:text-white"
               style={{ fontVariant: ["tabular-nums"] }}
             >
               {isRunning
@@ -211,7 +229,7 @@ export default function NewShot() {
                       pause();
                     }}
                   >
-                    Stop
+                    Stop timer
                   </Button>
                 ) : totalSeconds ? (
                   <Button
@@ -222,7 +240,7 @@ export default function NewShot() {
                       reset(undefined, false);
                     }}
                   >
-                    Reset
+                    Reset timer
                   </Button>
                 ) : (
                   <Button
@@ -237,27 +255,19 @@ export default function NewShot() {
                   </Button>
                 )}
 
-                {totalSeconds && !isRunning ? (
-                  <Button
-                    size="small"
-                    onPress={() => {
+                <Button
+                  size="small"
+                  onPress={() => {
+                    if (totalSeconds && !isRunning) {
                       setFieldValue("duration", totalSeconds.toString());
-                      grindSettingInput.current?.focus();
                       reset(undefined, false);
-                    }}
-                  >
-                    Apply & Next
-                  </Button>
-                ) : !totalSeconds && !isRunning ? (
-                  <Button
-                    size="small"
-                    onPress={() => {
-                      grindSettingInput.current?.focus();
-                    }}
-                  >
-                    Next
-                  </Button>
-                ) : null}
+                    }
+
+                    grindSettingInput.current?.focus();
+                  }}
+                >
+                  Next
+                </Button>
               </>
             ) : (
               <Button
@@ -292,8 +302,16 @@ const Input = forwardRef(
     const colorScheme = useColorScheme();
 
     return (
-      <Card.Content className="p-2.5 pl-4">
-        <View className="flex-row items-center justify-between space-x-4">
+      <Card.Content
+        className={classNames(rest.multiline ? "p-4" : "p-2.5 pl-4")}
+      >
+        <View
+          className={classNames(
+            rest.multiline
+              ? "flex-col space-y-3"
+              : "flex-row items-center justify-between space-x-4"
+          )}
+        >
           <View className="flex-row items-center justify-between flex-1 max-w-[100]">
             <Text className="text-lg dark:text-white">{label}</Text>
 
@@ -303,11 +321,14 @@ const Input = forwardRef(
           <TextInput
             {...rest}
             ref={ref}
-            className="flex-1 h-10 px-2 bg-gray-100 rounded-lg dark:bg-gray-800 dark:text-white"
+            className={classNames(
+              "rounded-lg bg-gray-100 dark:bg-gray-800 dark:text-white",
+              rest.multiline ? "p-3 -mx-1.5 -mb-1.5" : "h-10 px-2 flex-1"
+            )}
             placeholderTextColor={
               { light: colors.stone[400], dark: colors.stone[600] }[colorScheme]
             }
-            style={{ fontSize: 18 }}
+            style={{ fontSize: 18, ...style }}
           />
         </View>
       </Card.Content>

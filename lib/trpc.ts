@@ -10,7 +10,7 @@ export const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
       // url: "https://crema-api.onrender.com",
-      url: "http://192.168.0.105:1337",
+      url: "http://192.168.0.105:1337/trpc",
       async headers() {
         const token = await getToken();
 
