@@ -6,13 +6,13 @@ import {
   BeanIcon,
   CheckIcon,
   ChevronDownIcon,
-  PlusIcon,
   TimerIcon,
   TimerOff,
   TimerReset,
 } from "lucide-react-native";
 import { forwardRef, Fragment, Ref, useRef, useState } from "react";
 import {
+  Alert,
   InputAccessoryView,
   Modal,
   SafeAreaView,
@@ -24,7 +24,6 @@ import {
   useColorScheme,
   View,
 } from "react-native";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { useStopwatch } from "react-timer-hook";
 import colors from "tailwindcss/colors";
 
@@ -55,7 +54,13 @@ export default function NewShot() {
   const { totalSeconds, isRunning, start, pause, reset } = useStopwatch();
 
   // Server state
-  const { data: beans } = trpc.bean.list.useQuery();
+  const { data: beans, refetch: refetchBeans } = trpc.bean.list.useQuery();
+  const { isLoading: createBeanLoading, mutate } = trpc.bean.create.useMutation(
+    {
+      onError: () => Alert.alert("Failed to add new bean"),
+      onSuccess: () => refetchBeans(),
+    }
+  );
 
   const { values, handleChange, setFieldValue } = useFormik({
     initialValues: {
@@ -71,6 +76,26 @@ export default function NewShot() {
 
   const selectedBean = beans?.find(({ id }) => id === values.bean);
 
+  // Handlers
+  async function handleCreateBean() {
+    Alert.prompt(
+      "New bean",
+      "Name of the bean",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Add bean",
+          onPress: (name) => {
+            if (name) {
+              mutate({ name });
+            }
+          },
+        },
+      ],
+      "plain-text"
+    );
+  }
+
   return (
     <>
       <Screen>
@@ -78,6 +103,7 @@ export default function NewShot() {
           <Card>
             <Input
               // autoFocus
+              suffix="gram"
               label="Dose"
               placeholder="18"
               inputAccessoryViewID="next"
@@ -93,6 +119,7 @@ export default function NewShot() {
             <Divider />
 
             <Input
+              suffix="gram"
               label="Yield"
               placeholder="36"
               keyboardType="decimal-pad"
@@ -108,8 +135,8 @@ export default function NewShot() {
             <Divider />
 
             <Input
+              suffix="sec"
               label="Duration"
-              // editable={!isRunning}
               placeholder="30"
               keyboardType="number-pad"
               value={values.duration}
@@ -145,6 +172,7 @@ export default function NewShot() {
 
                 <TouchableOpacity
                   className="flex-row items-center justify-between flex-1 h-10 px-2"
+                  hitSlop={20}
                   onPress={() => {
                     setIsBeansVisible(true);
                     selectionAsync();
@@ -314,9 +342,9 @@ export default function NewShot() {
             </View>
 
             <View className="items-center p-6">
-              <View className="items-center justify-center w-20 h-20 rounded-full bg-emerald-100 dark:bg-emerald-500/20">
+              <View className="items-center justify-center w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-500/20">
                 <BeanIcon
-                  size={40}
+                  size={36}
                   color={
                     { light: colors.emerald[600], dark: colors.emerald[500] }[
                       colorScheme
@@ -335,37 +363,46 @@ export default function NewShot() {
             </View>
           </View>
 
-          <ScrollView className="p-6 space-y-8">
-            <Card>
-              {beans?.map((bean, i) => (
-                <Fragment key={bean.id}>
-                  {i ? <Divider /> : null}
+          <View className="flex-1 p-6 pt-7 space-y-6">
+            <Card className="flex-1 overflow-hidden">
+              <ScrollView className="flex-1">
+                {beans?.map((bean, i) => (
+                  <Fragment key={bean.id}>
+                    {i ? <Divider /> : null}
 
-                  <TouchableOpacity
-                    onPress={async () => {
-                      selectionAsync();
-                      await setFieldValue("bean", bean.id);
-                      setIsBeansVisible(false);
-                    }}
-                    className="flex-row items-center justify-between p-4"
-                  >
-                    <Text className="text-lg dark:text-white">{bean.name}</Text>
+                    <TouchableOpacity
+                      onPress={async () => {
+                        selectionAsync();
+                        await setFieldValue("bean", bean.id);
+                        setIsBeansVisible(false);
+                      }}
+                      className="flex-row items-center justify-between p-4"
+                    >
+                      <Text className="text-lg dark:text-white">
+                        {bean.name}
+                      </Text>
 
-                    {bean.id === values.bean && (
-                      <Animated.View
-                        entering={FadeIn.duration(200)}
-                        exiting={FadeOut.duration(100)}
-                      >
-                        <CheckIcon size={22} color={colors.emerald[700]} />
-                      </Animated.View>
-                    )}
-                  </TouchableOpacity>
-                </Fragment>
-              ))}
+                      {bean.id === values.bean && (
+                        <CheckIcon
+                          size={22}
+                          color={
+                            {
+                              light: colors.emerald[700],
+                              dark: colors.emerald[500],
+                            }[colorScheme]
+                          }
+                        />
+                      )}
+                    </TouchableOpacity>
+                  </Fragment>
+                ))}
+              </ScrollView>
             </Card>
 
-            <Button icon={PlusIcon}>Add bean</Button>
-          </ScrollView>
+            <Button onPress={handleCreateBean} loading={createBeanLoading}>
+              New bean
+            </Button>
+          </View>
         </SafeAreaView>
 
         <StatusBar style="light" />
@@ -375,11 +412,15 @@ export default function NewShot() {
 }
 
 interface InputProps extends TextInputProps {
+  suffix?: string;
   label: string;
 }
 
 const Input = forwardRef(
-  ({ label, children, style, ...rest }: InputProps, ref: Ref<TextInput>) => {
+  (
+    { label, children, style, suffix, ...rest }: InputProps,
+    ref: Ref<TextInput>
+  ) => {
     const colorScheme = useColorScheme();
 
     return (
@@ -399,18 +440,37 @@ const Input = forwardRef(
             {children}
           </View>
 
-          <TextInput
-            {...rest}
-            ref={ref}
+          <View
             className={classNames(
-              "rounded-lg bg-gray-100 dark:bg-gray-800 dark:text-white",
-              rest.multiline ? "p-3 -mx-1.5 -mb-1.5" : "h-10 px-2 flex-1"
+              "relative rounded-lg",
+              rest.multiline ? "-mx-1.5 -mb-1.5" : "h-10 flex-1",
+              suffix && "rounded-lg overflow-hidden"
             )}
-            placeholderTextColor={
-              { light: colors.stone[400], dark: colors.stone[600] }[colorScheme]
-            }
-            style={{ fontSize: 18, ...style }}
-          />
+          >
+            <TextInput
+              {...rest}
+              ref={ref}
+              className={classNames(
+                "w-full h-full bg-gray-100 dark:bg-gray-800 dark:text-white",
+                rest.multiline ? "p-3" : "px-2",
+                !suffix && "rounded-lg"
+              )}
+              placeholderTextColor={
+                { light: colors.stone[400], dark: colors.stone[600] }[
+                  colorScheme
+                ]
+              }
+              style={{ fontSize: 18, ...style }}
+            />
+
+            {suffix && (
+              <View className="absolute right-0 items-center justify-center w-16 h-full px-3 bg-gray-200/50 dark:bg-gray-700/50">
+                <Text className="text-base text-center text-gray-500 dark:text-gray-400 -translate-y-px">
+                  {suffix}
+                </Text>
+              </View>
+            )}
+          </View>
         </View>
       </Card.Content>
     );

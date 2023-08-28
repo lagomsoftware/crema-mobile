@@ -36,11 +36,13 @@ function Button(
 ) {
   const colorScheme = useColorScheme();
 
+  const disabled = rest.disabled || loading;
+
   return (
     <TouchableOpacity
       {...rest}
+      disabled={disabled}
       ref={ref}
-      style={style}
       onPress={(e) => {
         impactAsync(
           {
@@ -63,11 +65,11 @@ function Button(
         { default: "px-6 py-4 space-x-2", small: "px-5 py-2.5 space-x-2" }[
           size
         ],
+        disabled && "opacity-50",
       )}
+      style={style}
     >
-      {size === "default" && (loading || Icon) ? (
-        <View className={Icon ? "w-[22]" : loading ? "w-[22]" : undefined} />
-      ) : null}
+      {size === "default" && <View className="w-[22]" />}
 
       <Text
         className={classNames(
@@ -103,7 +105,9 @@ function Button(
             }[variant]
           }
         />
-      ) : null}
+      ) : (
+        <View className="w-[22]" />
+      )}
     </TouchableOpacity>
   );
 }
