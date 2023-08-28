@@ -42,7 +42,12 @@ function Button(
       ref={ref}
       style={style}
       onPress={(e) => {
-        impactAsync(ImpactFeedbackStyle.Medium);
+        impactAsync(
+          {
+            small: ImpactFeedbackStyle.Light,
+            default: ImpactFeedbackStyle.Medium,
+          }[size],
+        );
 
         if (rest.onPress) {
           rest.onPress(e);

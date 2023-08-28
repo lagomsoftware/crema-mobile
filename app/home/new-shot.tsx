@@ -1,16 +1,22 @@
 import Slider from "@react-native-community/slider";
 import { selectionAsync } from "expo-haptics";
-import { Link } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { useFormik } from "formik";
 import {
+  BeanIcon,
+  CheckIcon,
   ChevronDownIcon,
+  PlusIcon,
   TimerIcon,
   TimerOff,
   TimerReset,
 } from "lucide-react-native";
-import { forwardRef, Ref, useRef, useState } from "react";
+import { forwardRef, Fragment, Ref, useRef, useState } from "react";
 import {
   InputAccessoryView,
+  Modal,
+  SafeAreaView,
+  ScrollView,
   Text,
   TextInput,
   TextInputProps,
@@ -18,6 +24,7 @@ import {
   useColorScheme,
   View,
 } from "react-native";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { useStopwatch } from "react-timer-hook";
 import colors from "tailwindcss/colors";
 
@@ -40,6 +47,7 @@ export default function NewShot() {
   const grindSettingInput = useRef<TextInput>(null);
 
   // Local state
+  const [isBeansVisible, setIsBeansVisible] = useState<boolean>(false);
   const [focusedInput, setFocusedInput] = useState<
     "dose" | "yield" | "duration" | "grindSetting" | "notes"
   >("dose");
@@ -47,19 +55,21 @@ export default function NewShot() {
   const { totalSeconds, isRunning, start, pause, reset } = useStopwatch();
 
   // Server state
-  trpc.shot.listCoffees.useQuery();
+  const { data: beans } = trpc.bean.list.useQuery();
 
   const { values, handleChange, setFieldValue } = useFormik({
     initialValues: {
       dose: "",
       yield: "",
       notes: "",
-      coffee: "",
+      bean: "",
       duration: "",
       grindSetting: "",
     },
     onSubmit: () => {},
   });
+
+  const selectedBean = beans?.find(({ id }) => id === values.bean);
 
   return (
     <>
@@ -130,35 +140,34 @@ export default function NewShot() {
             <Card.Content className="p-2.5 pl-4">
               <View className="flex-row items-center justify-between space-x-4">
                 <Text className="flex-1 text-lg dark:text-white max-w-[100]">
-                  Coffee
+                  Bean
                 </Text>
 
-                <Link asChild href="/home/new-shot/coffee">
-                  <TouchableOpacity
-                    className="flex-row items-center justify-between flex-1 h-10 px-2"
-                    onPressIn={() => {
-                      selectionAsync();
-                    }}
+                <TouchableOpacity
+                  className="flex-row items-center justify-between flex-1 h-10 px-2"
+                  onPress={() => {
+                    setIsBeansVisible(true);
+                    selectionAsync();
+                  }}
+                >
+                  <Text
+                    className="w-[80%] text-lg dark:text-white -translate-x-2.5"
+                    numberOfLines={1}
                   >
-                    <Text
-                      className="w-[80%] text-lg text-gray-600 dark:text-gray-400 -translate-x-2.5"
-                      numberOfLines={1}
-                    >
-                      Mollbergs blandning
-                    </Text>
+                    {selectedBean?.name || "Choose a bean"}
+                  </Text>
 
-                    <ChevronDownIcon
-                      size={24}
-                      color={
-                        {
-                          light: colors.stone[400],
-                          dark: colors.stone[500],
-                        }[colorScheme]
-                      }
-                      className="translate-y-px"
-                    />
-                  </TouchableOpacity>
-                </Link>
+                  <ChevronDownIcon
+                    size={24}
+                    color={
+                      {
+                        light: colors.stone[400],
+                        dark: colors.stone[500],
+                      }[colorScheme]
+                    }
+                    className="translate-y-px"
+                  />
+                </TouchableOpacity>
               </View>
             </Card.Content>
           </Card>
@@ -289,6 +298,78 @@ export default function NewShot() {
           </View>
         </View>
       </InputAccessoryView>
+
+      <Modal
+        animationType="slide"
+        presentationStyle="formSheet"
+        visible={isBeansVisible}
+        onRequestClose={() => {
+          setIsBeansVisible(false);
+        }}
+      >
+        <SafeAreaView className="flex-1 bg-gray-100 dark:bg-gray-950">
+          <View className="bg-white dark:bg-gray-900">
+            <View className="items-center py-2">
+              <View className="w-full h-[4.5] max-w-[60] bg-gray-300 dark:bg-gray-600 rounded-full" />
+            </View>
+
+            <View className="items-center p-6">
+              <View className="items-center justify-center w-20 h-20 rounded-full bg-emerald-100 dark:bg-emerald-500/20">
+                <BeanIcon
+                  size={40}
+                  color={
+                    { light: colors.emerald[600], dark: colors.emerald[500] }[
+                      colorScheme
+                    ]
+                  }
+                />
+              </View>
+
+              <Text className="mt-5 text-4xl font-medium text-center dark:text-white">
+                Beans
+              </Text>
+
+              <Text className="mt-3 text-lg text-center dark:text-white">
+                Use an existing bean or add a new one.
+              </Text>
+            </View>
+          </View>
+
+          <ScrollView className="p-6 space-y-8">
+            <Card>
+              {beans?.map((bean, i) => (
+                <Fragment key={bean.id}>
+                  {i ? <Divider /> : null}
+
+                  <TouchableOpacity
+                    onPress={async () => {
+                      selectionAsync();
+                      await setFieldValue("bean", bean.id);
+                      setIsBeansVisible(false);
+                    }}
+                    className="flex-row items-center justify-between p-4"
+                  >
+                    <Text className="text-lg dark:text-white">{bean.name}</Text>
+
+                    {bean.id === values.bean && (
+                      <Animated.View
+                        entering={FadeIn.duration(200)}
+                        exiting={FadeOut.duration(100)}
+                      >
+                        <CheckIcon size={22} color={colors.emerald[700]} />
+                      </Animated.View>
+                    )}
+                  </TouchableOpacity>
+                </Fragment>
+              ))}
+            </Card>
+
+            <Button icon={PlusIcon}>Add bean</Button>
+          </ScrollView>
+        </SafeAreaView>
+
+        <StatusBar style="light" />
+      </Modal>
     </>
   );
 }
@@ -308,7 +389,7 @@ const Input = forwardRef(
         <View
           className={classNames(
             rest.multiline
-              ? "flex-col space-y-3"
+              ? "flex-col space-y-2.5"
               : "flex-row items-center justify-between space-x-4"
           )}
         >
