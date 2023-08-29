@@ -55,6 +55,7 @@ function Button(
           rest.onPress(e);
         }
       }}
+      activeOpacity={0.5}
       className={classNames(
         "flex-row items-center justify-between",
         {

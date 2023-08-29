@@ -3,9 +3,9 @@ import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFormik } from "formik";
 import {
-  BeanIcon,
   CheckIcon,
   ChevronDownIcon,
+  PlusIcon,
   TimerIcon,
   TimerOff,
   TimerReset,
@@ -15,7 +15,6 @@ import {
   Alert,
   InputAccessoryView,
   Modal,
-  SafeAreaView,
   ScrollView,
   Text,
   TextInput,
@@ -24,6 +23,7 @@ import {
   useColorScheme,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useStopwatch } from "react-timer-hook";
 import colors from "tailwindcss/colors";
 
@@ -46,6 +46,7 @@ interface FormValues {
 
 export default function NewShot() {
   const colorScheme = useColorScheme();
+  const insets = useSafeAreaInsets();
   const router = useRouter();
 
   // Refs
@@ -376,75 +377,73 @@ export default function NewShot() {
           setIsBeansVisible(false);
         }}
       >
-        <SafeAreaView className="flex-1 bg-gray-100 dark:bg-gray-950">
-          <View className="bg-white dark:bg-gray-900">
-            <View className="items-center py-2">
-              <View className="w-full h-[4.5] max-w-[60] bg-gray-300 dark:bg-gray-600 rounded-full" />
-            </View>
-
-            <View className="items-center p-6">
-              <View className="items-center justify-center w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-500/20">
-                <BeanIcon
-                  size={36}
-                  color={
-                    { light: colors.emerald[600], dark: colors.emerald[500] }[
-                      colorScheme
-                    ]
-                  }
-                />
-              </View>
-
-              <Text className="mt-5 text-4xl font-medium text-center dark:text-white">
-                Beans
-              </Text>
-
-              <Text className="mt-3 text-lg text-center dark:text-white">
-                Use an existing bean or add a new one.
-              </Text>
-            </View>
+        <View className="bg-gray-100 border-b border-gray-200/50 dark:bg-gray-950 dark:border-gray-700/50">
+          <View className="items-center py-2">
+            <View className="w-full h-[4.5] max-w-[60] bg-gray-300 dark:bg-gray-600 rounded-full" />
           </View>
 
-          <View className="flex-1 p-6 pt-7 space-y-6">
-            <Card className="flex-1">
-              <ScrollView className="flex-1 rounded-[10px] overflow-hidden">
-                {beans?.map((bean, i) => (
-                  <Fragment key={bean.id}>
-                    {i ? <Divider /> : null}
-
-                    <TouchableOpacity
-                      onPress={async () => {
-                        selectionAsync();
-                        await setFieldValue("bean", bean.id);
-                        setIsBeansVisible(false);
-                      }}
-                      className="flex-row items-center justify-between p-4"
-                    >
-                      <Text className="text-lg dark:text-white">
-                        {bean.name}
-                      </Text>
-
-                      {bean.id === values.bean && (
-                        <CheckIcon
-                          size={22}
-                          color={
-                            {
-                              light: colors.emerald[700],
-                              dark: colors.emerald[500],
-                            }[colorScheme]
-                          }
-                        />
-                      )}
-                    </TouchableOpacity>
-                  </Fragment>
-                ))}
-              </ScrollView>
-            </Card>
-
-            <Button onPress={handleCreateBean} loading={createBeanLoading}>
-              New bean
-            </Button>
+          <View className="px-5 pt-20 pb-5">
+            <Text className="mt-5 text-4xl font-semibold dark:text-white">
+              Choose a bean
+            </Text>
           </View>
-        </SafeAreaView>
+        </View>
+
+        <ScrollView
+          contentInsetAdjustmentBehavior="automatic"
+          className="flex-1 bg-white dark:bg-gray-900"
+          contentContainerStyle={{ paddingBottom: 125 }}
+        >
+          {beans?.map((bean, i) => (
+            <Fragment key={bean.id}>
+              <TouchableOpacity
+                onPress={async () => {
+                  selectionAsync();
+                  await setFieldValue("bean", bean.id);
+                  setIsBeansVisible(false);
+                }}
+                className="flex-row items-center justify-between px-5 py-4"
+              >
+                <Text className="text-lg dark:text-white">{bean.name}</Text>
+
+                {bean.id === values.bean && (
+                  <CheckIcon
+                    size={22}
+                    color={
+                      {
+                        light: colors.emerald[700],
+                        dark: colors.emerald[500],
+                      }[colorScheme]
+                    }
+                  />
+                )}
+              </TouchableOpacity>
+
+              <Divider />
+            </Fragment>
+          ))}
+        </ScrollView>
+
+        <View
+          style={{
+            left: 0,
+            right: 0,
+            bottom: 0,
+            position: "absolute",
+            paddingLeft: insets.left + 20,
+            paddingRight: insets.right + 20,
+            paddingBottom: insets.bottom + 20,
+          }}
+        >
+          <Button
+            icon={PlusIcon}
+            onPress={handleCreateBean}
+            loading={createBeanLoading}
+            className="shadow-xl shadow-emerald-700/60 dark:shadow-gray-950/50"
+          >
+            New bean
+          </Button>
+        </View>
 
         <StatusBar style="light" />
       </Modal>

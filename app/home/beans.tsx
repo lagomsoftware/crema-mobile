@@ -6,7 +6,7 @@ import Card from "../../components/card";
 import Screen from "../../components/screen";
 import { trpc } from "../../lib/trpc";
 
-export default function Coffee() {
+export default function Beans() {
   // Server state
   const { data: beans, refetch: refetchBeans } = trpc.bean.list.useQuery();
 
