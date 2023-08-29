@@ -106,7 +106,7 @@ function Button(
           }
         />
       ) : (
-        <View className="w-[22]" />
+        size === "default" && <View className="w-[22]" />
       )}
     </TouchableOpacity>
   );

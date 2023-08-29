@@ -9,7 +9,7 @@ import {
   SettingsIcon,
   TimerIcon,
 } from "lucide-react-native";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -51,78 +51,6 @@ export default function Home() {
     setRefreshing(false);
   }
 
-  const renderShot = useCallback(
-    ({ item: shot, index: i }) => (
-      <Link asChild href="/profile" className="mb-5">
-        <TouchableOpacity>
-          <Card>
-            <Card.Content>
-              <View className="flex-row justify-between align-baseline">
-                <Text className="text-2xl font-medium dark:text-white">
-                  {format(new Date(shot.createdAt), "MMM dd")}
-                </Text>
-
-                <View className="flex-row items-center">
-                  <Text className="text-base text-gray-500 dark:text-gray-500">
-                    Shot #{data?.length - i}
-                  </Text>
-
-                  <Text className="ml-2 mr-1.5 text-base text-gray-400 dark:text-gray-600">
-                    •
-                  </Text>
-
-                  <Text className="text-base text-gray-500 dark:text-gray-500">
-                    {format(new Date(shot.createdAt), "HH:mm")}
-                  </Text>
-                </View>
-              </View>
-
-              <View className="mt-4 space-y-2.5">
-                <ShotDataRow
-                  icon={ArrowRightIcon}
-                  label="Dose"
-                  value={shot.dose}
-                  suffix="g"
-                />
-
-                <ShotDataRow
-                  icon={ArrowLeftIcon}
-                  label="Yield"
-                  value={shot.yield}
-                  suffix="g"
-                />
-
-                <ShotDataRow
-                  icon={TimerIcon}
-                  label="Extraction"
-                  value={shot.duration}
-                  suffix="s"
-                />
-
-                <ShotDataRow
-                  icon={SettingsIcon}
-                  label="Grind"
-                  value={
-                    typeof shot.grindSetting === "number"
-                      ? shot.grindSetting
-                      : "N/A"
-                  }
-                />
-
-                <ShotDataRow
-                  icon={BeanIcon}
-                  label="Bean"
-                  value={shot.coffee ?? "N/A"}
-                />
-              </View>
-            </Card.Content>
-          </Card>
-        </TouchableOpacity>
-      </Link>
-    ),
-    [],
-  );
-
   return (
     <SafeAreaView
       className="flex-1"
@@ -152,7 +80,74 @@ export default function Home() {
           contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
           maxToRenderPerBatch={3}
           initialNumToRender={3}
-          renderItem={renderShot}
+          renderItem={({ item: shot, index: i }) => (
+            <Link asChild href="/profile" className="mb-5">
+              <TouchableOpacity>
+                <Card>
+                  <Card.Content>
+                    <View className="flex-row justify-between align-baseline">
+                      <Text className="text-2xl font-medium dark:text-white">
+                        {format(new Date(shot.createdAt), "MMM dd")}
+                      </Text>
+
+                      <View className="flex-row items-center">
+                        <Text className="text-base text-gray-500 dark:text-gray-500">
+                          Shot #{data?.length - i}
+                        </Text>
+
+                        <Text className="ml-2 mr-1.5 text-base text-gray-400 dark:text-gray-600">
+                          •
+                        </Text>
+
+                        <Text className="text-base text-gray-500 dark:text-gray-500">
+                          {format(new Date(shot.createdAt), "HH:mm")}
+                        </Text>
+                      </View>
+                    </View>
+
+                    <View className="mt-4 space-y-2.5">
+                      <ShotDataRow
+                        icon={ArrowRightIcon}
+                        label="Dose"
+                        value={shot.dose}
+                        suffix="g"
+                      />
+
+                      <ShotDataRow
+                        icon={ArrowLeftIcon}
+                        label="Yield"
+                        value={shot.yield}
+                        suffix="g"
+                      />
+
+                      <ShotDataRow
+                        icon={TimerIcon}
+                        label="Extraction"
+                        value={shot.duration}
+                        suffix="s"
+                      />
+
+                      <ShotDataRow
+                        icon={SettingsIcon}
+                        label="Grind"
+                        value={
+                          typeof shot.grindSetting === "number"
+                            ? shot.grindSetting
+                            : "N/A"
+                        }
+                      />
+
+                      <ShotDataRow
+                        icon={BeanIcon}
+                        label="Bean"
+                        value={shot.bean?.name ?? "N/A"}
+                      />
+                    </View>
+                  </Card.Content>
+                </Card>
+              </TouchableOpacity>
+            </Link>
+          )}
           getItemLayout={(_, index) => ({
             offset: SHOT_HEIGHT * index,
             length: SHOT_HEIGHT,

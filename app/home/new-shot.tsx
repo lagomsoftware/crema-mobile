@@ -1,5 +1,5 @@
-import Slider from "@react-native-community/slider";
 import { selectionAsync } from "expo-haptics";
+import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFormik } from "formik";
 import {
@@ -35,49 +35,79 @@ import classNames from "../../lib/classNames";
 import { trpc } from "../../lib/trpc";
 import { formatTimer } from "../../lib/utils";
 
+interface FormValues {
+  dose: string;
+  notes: string;
+  bean: string;
+  duration: string;
+  yieldAmount: string;
+  grindSetting: string;
+}
+
 export default function NewShot() {
   const colorScheme = useColorScheme();
+  const router = useRouter();
 
   // Refs
   const doseInput = useRef<TextInput>(null);
-  const yieldInput = useRef<TextInput>(null);
   const notesInput = useRef<TextInput>(null);
   const durationInput = useRef<TextInput>(null);
+  const yieldAmountInput = useRef<TextInput>(null);
   const grindSettingInput = useRef<TextInput>(null);
 
   // Local state
   const [isBeansVisible, setIsBeansVisible] = useState<boolean>(false);
   const [focusedInput, setFocusedInput] = useState<
-    "dose" | "yield" | "duration" | "grindSetting" | "notes"
+    "dose" | "yieldAmount" | "duration" | "grindSetting" | "notes"
   >("dose");
 
   const { totalSeconds, isRunning, start, pause, reset } = useStopwatch();
 
   // Server state
   const { data: beans, refetch: refetchBeans } = trpc.bean.list.useQuery();
-  const { isLoading: createBeanLoading, mutate } = trpc.bean.create.useMutation(
-    {
+
+  const { isLoading: createShotLoading, mutate: createShot } =
+    trpc.shot.create.useMutation({
+      onError: () => Alert.alert("Failed to add new shot"),
+      onSuccess: () => {
+        router.replace("/home");
+      },
+    });
+
+  const { isLoading: createBeanLoading, mutate: createBean } =
+    trpc.bean.create.useMutation({
       onError: () => Alert.alert("Failed to add new bean"),
       onSuccess: () => refetchBeans(),
-    }
-  );
+    });
 
-  const { values, handleChange, setFieldValue } = useFormik({
-    initialValues: {
-      dose: "",
-      yield: "",
-      notes: "",
-      bean: "",
-      duration: "",
-      grindSetting: "",
-    },
-    onSubmit: () => {},
-  });
+  const { values, handleSubmit, handleChange, setFieldValue } =
+    useFormik<FormValues>({
+      initialValues: {
+        dose: "",
+        notes: "",
+        bean: "",
+        duration: "",
+        yieldAmount: "",
+        grindSetting: "",
+      },
+      onSubmit: handleCreateShot,
+    });
 
   const selectedBean = beans?.find(({ id }) => id === values.bean);
 
   // Handlers
-  async function handleCreateBean() {
+  function handleCreateShot(values: FormValues) {
+    createShot({
+      grindSetting: parseFloat(values.grindSetting.replaceAll(",", ".")),
+      duration: parseFloat(values.duration.replaceAll(",", ".")),
+      yield: parseFloat(values.yieldAmount.replaceAll(",", ".")),
+      dose: parseFloat(values.dose.replaceAll(",", ".")),
+      beanId: values.bean,
+      notes: values.notes,
+    });
+  }
+
+  function handleCreateBean() {
     Alert.prompt(
       "New bean",
       "Name of the bean",
@@ -87,153 +117,164 @@ export default function NewShot() {
           text: "Add bean",
           onPress: (name) => {
             if (name) {
-              mutate({ name });
+              createBean({ name });
             }
           },
         },
       ],
-      "plain-text"
+      "plain-text",
     );
   }
 
   return (
     <>
       <Screen>
-        <View className="flex-col space-y-5">
-          <Card>
-            <Input
-              // autoFocus
-              suffix="gram"
-              label="Dose"
-              placeholder="18"
-              inputAccessoryViewID="next"
-              keyboardType="decimal-pad"
-              value={values.dose}
-              ref={doseInput}
-              onChangeText={handleChange("dose")}
-              onFocus={() => {
-                setFocusedInput("dose");
-              }}
-            />
+        <View className="flex-col space-y-7">
+          <View className="flex-col space-y-5">
+            <Card>
+              <Input
+                // autoFocus
+                suffix="gram"
+                label="Dose"
+                placeholder="18"
+                inputAccessoryViewID="next"
+                keyboardType="decimal-pad"
+                value={values.dose}
+                ref={doseInput}
+                onChangeText={handleChange("dose")}
+                onFocus={() => {
+                  setFocusedInput("dose");
+                }}
+              />
 
-            <Divider />
+              <Divider />
 
-            <Input
-              suffix="gram"
-              label="Yield"
-              placeholder="36"
-              keyboardType="decimal-pad"
-              value={values.yield}
-              ref={yieldInput}
-              onChangeText={handleChange("yield")}
-              inputAccessoryViewID="next"
-              onFocus={() => {
-                setFocusedInput("yield");
-              }}
-            />
+              <Input
+                suffix="gram"
+                label="Yield"
+                placeholder="36"
+                keyboardType="decimal-pad"
+                value={values.yieldAmount}
+                ref={yieldAmountInput}
+                onChangeText={handleChange("yieldAmount")}
+                inputAccessoryViewID="next"
+                onFocus={() => {
+                  setFocusedInput("yieldAmount");
+                }}
+              />
 
-            <Divider />
+              <Divider />
 
-            <Input
-              suffix="sec"
-              label="Duration"
-              placeholder="30"
-              keyboardType="number-pad"
-              value={values.duration}
-              ref={durationInput}
-              onChangeText={handleChange("duration")}
-              inputAccessoryViewID="next"
-              onFocus={() => {
-                setFocusedInput("duration");
-              }}
-            />
+              <Input
+                suffix="sec"
+                label="Duration"
+                placeholder="30"
+                keyboardType="number-pad"
+                value={values.duration}
+                ref={durationInput}
+                onChangeText={handleChange("duration")}
+                inputAccessoryViewID="next"
+                onFocus={() => {
+                  setFocusedInput("duration");
+                }}
+              />
 
-            <Divider />
+              <Divider />
 
-            <Input
-              label="Grind"
-              placeholder="5"
-              keyboardType="decimal-pad"
-              value={values.grindSetting}
-              ref={grindSettingInput}
-              onChangeText={handleChange("grindSetting")}
-              onFocus={() => {
-                setFocusedInput("grindSetting");
-              }}
-            />
-          </Card>
+              <Input
+                label="Grind"
+                placeholder="5"
+                keyboardType="decimal-pad"
+                value={values.grindSetting}
+                ref={grindSettingInput}
+                onChangeText={handleChange("grindSetting")}
+                onFocus={() => {
+                  setFocusedInput("grindSetting");
+                }}
+              />
+            </Card>
 
-          <Card>
-            <Card.Content className="p-2.5 pl-4">
-              <View className="flex-row items-center justify-between space-x-4">
-                <Text className="flex-1 text-lg dark:text-white max-w-[100]">
-                  Bean
-                </Text>
-
-                <TouchableOpacity
-                  className="flex-row items-center justify-between flex-1 h-10 px-2"
-                  hitSlop={20}
-                  onPress={() => {
-                    setIsBeansVisible(true);
-                    selectionAsync();
-                  }}
-                >
-                  <Text
-                    className="w-[80%] text-lg dark:text-white -translate-x-2.5"
-                    numberOfLines={1}
-                  >
-                    {selectedBean?.name || "Choose a bean"}
+            <Card>
+              <Card.Content className="p-2.5 pl-4">
+                <View className="flex-row items-center justify-between space-x-4">
+                  <Text className="flex-1 text-lg dark:text-white max-w-[100]">
+                    Bean
                   </Text>
 
-                  <ChevronDownIcon
-                    size={24}
-                    color={
-                      {
-                        light: colors.stone[400],
-                        dark: colors.stone[500],
-                      }[colorScheme]
-                    }
-                    className="translate-y-px"
-                  />
-                </TouchableOpacity>
-              </View>
-            </Card.Content>
-          </Card>
+                  <TouchableOpacity
+                    className="flex-row items-center justify-between flex-1 h-10 px-2"
+                    hitSlop={20}
+                    onPress={() => {
+                      setIsBeansVisible(true);
+                      selectionAsync();
+                    }}
+                  >
+                    <Text
+                      className="w-[80%] text-lg -translate-x-2.5 text-gray-600 dark:text-gray-300"
+                      numberOfLines={1}
+                    >
+                      {selectedBean?.name || "Choose a bean"}
+                    </Text>
 
-          <Card>
-            <Input
-              label="Notes"
-              placeholder="I noticed that..."
-              value={values.notes}
-              style={{ height: 200 }}
-              multiline
-              ref={notesInput}
-              onChangeText={handleChange("notes")}
-              onFocus={() => {
-                setFocusedInput("notes");
-              }}
-            />
-          </Card>
+                    <ChevronDownIcon
+                      size={24}
+                      color={
+                        {
+                          light: colors.stone[400],
+                          dark: colors.stone[500],
+                        }[colorScheme]
+                      }
+                      className="translate-y-px"
+                    />
+                  </TouchableOpacity>
+                </View>
+              </Card.Content>
+            </Card>
 
-          <Card>
-            <Card.Content className="p-2.5 px-4">
-              <View className="flex-row items-center justify-between space-x-4">
-                <Text className="text-lg dark:text-white flex-1 max-w-[100px]">
-                  Sweetness
-                </Text>
+            <Card>
+              <Input
+                label="Notes"
+                placeholder="I noticed that..."
+                value={values.notes}
+                style={{ height: 200 }}
+                multiline
+                ref={notesInput}
+                onChangeText={handleChange("notes")}
+                onFocus={() => {
+                  setFocusedInput("notes");
+                }}
+              />
+            </Card>
+          </View>
 
-                <Slider
-                  step={1}
-                  style={{ flex: 1 }}
-                  minimumValue={0}
-                  maximumValue={10}
-                  minimumTrackTintColor={colors.emerald[600]}
-                  thumbTintColor={colors.emerald[600]}
-                  tapToSeek
-                />
-              </View>
-            </Card.Content>
-          </Card>
+          {/* <Card> */}
+          {/*   <Card.Content className="p-2.5 px-4"> */}
+          {/*     <View className="flex-row items-center justify-between space-x-4"> */}
+          {/*       <Text className="text-lg dark:text-white flex-1 max-w-[100px]"> */}
+          {/*         Sweetness */}
+          {/*       </Text> */}
+          {/**/}
+          {/*       <Slider */}
+          {/*         step={1} */}
+          {/*         style={{ flex: 1 }} */}
+          {/*         minimumValue={0} */}
+          {/*         maximumValue={10} */}
+          {/*         minimumTrackTintColor={colors.emerald[600]} */}
+          {/*         thumbTintColor={colors.emerald[600]} */}
+          {/*         tapToSeek */}
+          {/*       /> */}
+          {/*     </View> */}
+          {/*   </Card.Content> */}
+          {/* </Card> */}
+          <Button
+            icon={CheckIcon}
+            loading={createShotLoading}
+            onPress={() => {
+              handleSubmit();
+            }}
+          >
+            Add shot
+          </Button>
         </View>
       </Screen>
 
@@ -312,9 +353,9 @@ export default function NewShot() {
                 onPress={() => {
                   switch (focusedInput) {
                     case "dose":
-                      yieldInput.current?.focus();
+                      yieldAmountInput.current?.focus();
                       break;
-                    case "yield":
+                    case "yieldAmount":
                       durationInput.current?.focus();
                       break;
                   }
@@ -364,8 +405,8 @@ export default function NewShot() {
           </View>
 
           <View className="flex-1 p-6 pt-7 space-y-6">
-            <Card className="flex-1 overflow-hidden">
-              <ScrollView className="flex-1">
+            <Card className="flex-1">
+              <ScrollView className="flex-1 rounded-[10px] overflow-hidden">
                 {beans?.map((bean, i) => (
                   <Fragment key={bean.id}>
                     {i ? <Divider /> : null}
@@ -419,7 +460,7 @@ interface InputProps extends TextInputProps {
 const Input = forwardRef(
   (
     { label, children, style, suffix, ...rest }: InputProps,
-    ref: Ref<TextInput>
+    ref: Ref<TextInput>,
   ) => {
     const colorScheme = useColorScheme();
 
@@ -431,7 +472,7 @@ const Input = forwardRef(
           className={classNames(
             rest.multiline
               ? "flex-col space-y-2.5"
-              : "flex-row items-center justify-between space-x-4"
+              : "flex-row items-center justify-between space-x-4",
           )}
         >
           <View className="flex-row items-center justify-between flex-1 max-w-[100]">
@@ -440,39 +481,20 @@ const Input = forwardRef(
             {children}
           </View>
 
-          <View
+          <TextInput
+            {...rest}
+            ref={ref}
             className={classNames(
-              "relative rounded-lg",
-              rest.multiline ? "-mx-1.5 -mb-1.5" : "h-10 flex-1",
-              suffix && "rounded-lg overflow-hidden"
+              "bg-gray-100 dark:bg-gray-800 dark:text-white rounded-lg",
+              rest.multiline ? "p-3 -mx-1.5 -mb-1.5" : "px-2 h-10 flex-1",
             )}
-          >
-            <TextInput
-              {...rest}
-              ref={ref}
-              className={classNames(
-                "w-full h-full bg-gray-100 dark:bg-gray-800 dark:text-white",
-                rest.multiline ? "p-3" : "px-2",
-                !suffix && "rounded-lg"
-              )}
-              placeholderTextColor={
-                { light: colors.stone[400], dark: colors.stone[600] }[
-                  colorScheme
-                ]
-              }
-              style={{ fontSize: 18, ...style }}
-            />
-
-            {suffix && (
-              <View className="absolute right-0 items-center justify-center w-16 h-full px-3 bg-gray-200/50 dark:bg-gray-700/50">
-                <Text className="text-base text-center text-gray-500 dark:text-gray-400 -translate-y-px">
-                  {suffix}
-                </Text>
-              </View>
-            )}
-          </View>
+            placeholderTextColor={
+              { light: colors.stone[400], dark: colors.stone[600] }[colorScheme]
+            }
+            style={{ fontSize: 18, ...style }}
+          />
         </View>
       </Card.Content>
     );
-  }
+  },
 );
