@@ -59,7 +59,7 @@ export default function Login() {
                 contentPosition="left"
               />
 
-              <Text className="mt-8 text-4xl font-medium dark:text-white">
+              <Text className="mt-8 text-4xl font-semibold dark:text-white">
                 Welcome to Crema
               </Text>
 

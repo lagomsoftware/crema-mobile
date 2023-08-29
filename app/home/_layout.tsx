@@ -1,10 +1,13 @@
 import { Tabs } from "expo-router";
-import { HomeIcon, PlusIcon } from "lucide-react-native";
+import {
+  BeanIcon,
+  PlusSquareIcon,
+  TableProperties,
+  UserIcon,
+} from "lucide-react-native";
 import React from "react";
-import { Text, useColorScheme, View } from "react-native";
+import { useColorScheme } from "react-native";
 import colors from "tailwindcss/colors";
-
-import classNames from "../../lib/classNames";
 
 export default function HomeLayout() {
   const colorScheme = useColorScheme();
@@ -31,7 +34,7 @@ export default function HomeLayout() {
             light: colors.stone[400],
             dark: colors.stone[500],
           }[colorScheme],
-          paddingBottom: 22,
+          paddingTop: 5,
           height: 85,
         },
         tabBarActiveTintColor: { light: colors.black, dark: colors.white }[
@@ -41,7 +44,7 @@ export default function HomeLayout() {
           light: colors.stone[500],
           dark: colors.stone[400],
         }[colorScheme],
-        tabBarShowLabel: false,
+        // tabBarShowLabel: false,
       }}
     >
       <Tabs.Screen
@@ -49,7 +52,7 @@ export default function HomeLayout() {
         options={{
           title: "My shots",
           ...largeHeader,
-          tabBarIcon: (props) => <HomeIcon {...props} size={28} />,
+          tabBarIcon: (props) => <TableProperties {...props} />,
         }}
       />
 
@@ -58,7 +61,16 @@ export default function HomeLayout() {
         options={{
           title: "New shot",
           ...largeHeader,
-          tabBarIcon: (props) => <PlusIcon {...props} size={28} />,
+          tabBarIcon: (props) => <PlusSquareIcon {...props} />,
+        }}
+      />
+
+      <Tabs.Screen
+        name="beans"
+        options={{
+          title: "Beans",
+          ...largeHeader,
+          tabBarIcon: (props) => <BeanIcon {...props} />,
         }}
       />
 
@@ -67,23 +79,7 @@ export default function HomeLayout() {
         options={{
           title: "My profile",
           ...largeHeader,
-          tabBarIcon: ({ focused, color }) => (
-            <View
-              className={classNames(
-                "items-center justify-center rounded-full w-9 h-9",
-                focused
-                  ? "bg-gray-300 dark:bg-gray-600"
-                  : "bg-gray-200 dark:bg-gray-700",
-              )}
-            >
-              <Text
-                className="text-lg font-medium dark:text-white"
-                style={{ color }}
-              >
-                A
-              </Text>
-            </View>
-          ),
+          tabBarIcon: (props) => <UserIcon {...props} />,
         }}
       />
     </Tabs>

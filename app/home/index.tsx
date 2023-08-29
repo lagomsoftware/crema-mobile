@@ -26,6 +26,8 @@ import ShotDataRow from "../../components/shot-data-row";
 import { trpc } from "../../lib/trpc";
 import { useRefetchOnFocus } from "../../lib/utils";
 
+const SHOT_HEIGHT = 266;
+
 export default function Home() {
   const { data, isLoading, refetch } = trpc.shot.list.useQuery();
   const colorScheme = useColorScheme();
@@ -59,10 +61,10 @@ export default function Home() {
     >
       <Link href="/home/new-shot" asChild>
         <TouchableOpacity
-          className="absolute z-10 items-center justify-center bg-emerald-700 dark:bg-emerald-700 rounded-full w-[72] h-[72] bottom-[22] right-[17] shadow-xl shadow-emerald-600/50 dark:shadow-gray-950"
-          onPressIn={() => {
-            impactAsync(ImpactFeedbackStyle.Medium);
+          onPress={() => {
+            impactAsync(ImpactFeedbackStyle.Light);
           }}
+          className="absolute z-10 items-center justify-center bg-emerald-700 dark:bg-emerald-700 rounded-full w-[72] h-[72] bottom-[22] right-[17] shadow-xl shadow-emerald-600/50 dark:shadow-gray-950"
         >
           <PlusIcon size={40} stroke="white" strokeWidth={1.5} />
         </TouchableOpacity>
@@ -76,8 +78,10 @@ export default function Home() {
           onRefresh={handleRefresh}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
+          maxToRenderPerBatch={3}
+          initialNumToRender={3}
           renderItem={({ item: shot, index: i }) => (
-            <Link key={shot.id} asChild href="/profile" className="mb-5">
+            <Link asChild href="/profile" className="mb-5">
               <TouchableOpacity>
                 <Card>
                   <Card.Content>
@@ -88,7 +92,7 @@ export default function Home() {
 
                       <View className="flex-row items-center">
                         <Text className="text-base text-gray-500 dark:text-gray-500">
-                          Shot #{data.length - i}
+                          Shot #{data?.length - i}
                         </Text>
 
                         <Text className="ml-2 mr-1.5 text-base text-gray-400 dark:text-gray-600">
@@ -136,7 +140,7 @@ export default function Home() {
                       <ShotDataRow
                         icon={BeanIcon}
                         label="Bean"
-                        value={shot.coffee ?? "N/A"}
+                        value={shot.bean?.name ?? "N/A"}
                       />
                     </View>
                   </Card.Content>
@@ -144,6 +148,11 @@ export default function Home() {
               </TouchableOpacity>
             </Link>
           )}
+          getItemLayout={(_, index) => ({
+            offset: SHOT_HEIGHT * index,
+            length: SHOT_HEIGHT,
+            index,
+          })}
         />
       ) : isLoading ? (
         <View className="p-5">
