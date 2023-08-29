@@ -17,7 +17,8 @@
 2. Clone your fork
 3. Install dependencies `npm install`
 4. Run project `npm start` or `npm run ios`
-5. Create a commit
-6. Create a pull request
-7. Wait for a review
-8. Merge changes
+5. Create a branch `git checkout -b [username]/[feature]`
+6. Create a commit
+7. Create a pull request
+8. Wait for a review
+9. Merge changes
