@@ -51,14 +51,14 @@ export default function Screen({
         contentInsetAdjustmentBehavior="automatic"
         style={{
           backgroundColor:
-            colorScheme === "light" ? colors.stone[100] : colors.stone[950],
+            colorScheme === "light" ? "#eeeeec" : colors.stone[950],
           flex: 1,
         }}
         contentContainerStyle={{
           paddingBottom: 50,
           paddingRight: 20,
           paddingLeft: 20,
-          paddingTop: 20,
+          ...rest.contentContainerStyle,
         }}
       >
         {children}

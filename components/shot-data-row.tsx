@@ -1,7 +1,8 @@
 import { Icon } from "lucide-react-native";
-import { ViewProps, Text, View } from "react-native";
+import { ViewProps, Text, View, TextStyle, StyleProp } from "react-native";
 
-interface ShotDataRowProps extends ViewProps {
+interface ShotDataRowProps extends Omit<ViewProps, "style"> {
+  style?: StyleProp<TextStyle>;
   value: string | number;
   suffix?: string;
   label: string;
@@ -13,6 +14,7 @@ export default function ShotDataRow({
   suffix,
   label,
   value,
+  style,
   ...rest
 }: ShotDataRowProps) {
   return (
@@ -29,6 +31,7 @@ export default function ShotDataRow({
         className="text-base dark:text-white max-w-[60%]"
         ellipsizeMode="tail"
         numberOfLines={1}
+        style={style}
       >
         {value}
         {suffix && (

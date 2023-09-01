@@ -1,5 +1,5 @@
 ## Changes
 
-- 
+-
 
 ## Screenshots
