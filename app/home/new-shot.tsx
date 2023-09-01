@@ -1,8 +1,10 @@
-import { selectionAsync } from "expo-haptics";
+import Slider, { SliderProps } from "@react-native-community/slider";
+import { impactAsync, ImpactFeedbackStyle, selectionAsync } from "expo-haptics";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFormik } from "formik";
 import {
+  BeanIcon,
   CheckIcon,
   ChevronDownIcon,
   PlusIcon,
@@ -22,7 +24,14 @@ import {
   TouchableOpacity,
   useColorScheme,
   View,
+  ViewProps,
 } from "react-native";
+import Animated, {
+  FadeInDown,
+  FadeInUp,
+  FadeOutDown,
+  FadeOutUp,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useStopwatch } from "react-timer-hook";
 import colors from "tailwindcss/colors";
@@ -38,8 +47,10 @@ import { formatTimer } from "../../lib/utils";
 interface FormValues {
   dose: string;
   notes: string;
-  bean: string;
+  beanId?: string;
+  acidity?: number;
   duration: string;
+  strength?: number;
   yieldAmount: string;
   grindSetting: string;
 }
@@ -71,6 +82,7 @@ export default function NewShot() {
     trpc.shot.create.useMutation({
       onError: () => Alert.alert("Failed to add new shot"),
       onSuccess: () => {
+        resetForm();
         router.replace("/home");
       },
     });
@@ -81,20 +93,21 @@ export default function NewShot() {
       onSuccess: () => refetchBeans(),
     });
 
-  const { values, handleSubmit, handleChange, setFieldValue } =
+  const { values, handleSubmit, handleChange, setFieldValue, resetForm } =
     useFormik<FormValues>({
-      initialValues: {
-        dose: "",
-        notes: "",
-        bean: "",
-        duration: "",
-        yieldAmount: "",
-        grindSetting: "",
-      },
       onSubmit: handleCreateShot,
+      initialValues: {
+        grindSetting: "",
+        yieldAmount: "",
+        duration: "",
+        strength: 5,
+        acidity: 5,
+        notes: "",
+        dose: "",
+      },
     });
 
-  const selectedBean = beans?.find(({ id }) => id === values.bean);
+  const selectedBean = beans?.find(({ id }) => id === values.beanId);
 
   // Handlers
   function handleCreateShot(values: FormValues) {
@@ -103,7 +116,9 @@ export default function NewShot() {
       duration: parseFloat(values.duration.replaceAll(",", ".")),
       yield: parseFloat(values.yieldAmount.replaceAll(",", ".")),
       dose: parseFloat(values.dose.replaceAll(",", ".")),
-      beanId: values.bean,
+      strength: values.strength,
+      acidity: values.acidity,
+      beanId: values.beanId,
       notes: values.notes,
     });
   }
@@ -130,143 +145,161 @@ export default function NewShot() {
   return (
     <>
       <Screen>
-        <View className="flex-col space-y-7">
-          <View className="flex-col space-y-5">
-            <Card>
-              <Input
-                // autoFocus
-                suffix="gram"
-                label="Dose"
-                placeholder="18"
-                inputAccessoryViewID="next"
-                keyboardType="decimal-pad"
-                value={values.dose}
-                ref={doseInput}
-                onChangeText={handleChange("dose")}
-                onFocus={() => {
-                  setFocusedInput("dose");
-                }}
-              />
-
-              <Divider />
-
-              <Input
-                suffix="gram"
-                label="Yield"
-                placeholder="36"
-                keyboardType="decimal-pad"
-                value={values.yieldAmount}
-                ref={yieldAmountInput}
-                onChangeText={handleChange("yieldAmount")}
-                inputAccessoryViewID="next"
-                onFocus={() => {
-                  setFocusedInput("yieldAmount");
-                }}
-              />
-
-              <Divider />
-
-              <Input
-                suffix="sec"
-                label="Duration"
-                placeholder="30"
-                keyboardType="number-pad"
-                value={values.duration}
-                ref={durationInput}
-                onChangeText={handleChange("duration")}
-                inputAccessoryViewID="next"
-                onFocus={() => {
-                  setFocusedInput("duration");
-                }}
-              />
-
-              <Divider />
-
-              <Input
-                label="Grind"
-                placeholder="5"
-                keyboardType="decimal-pad"
-                value={values.grindSetting}
-                ref={grindSettingInput}
-                onChangeText={handleChange("grindSetting")}
-                onFocus={() => {
-                  setFocusedInput("grindSetting");
-                }}
-              />
-            </Card>
-
-            <Card>
-              <Card.Content className="p-2.5 pl-4">
-                <View className="flex-row items-center justify-between space-x-4">
-                  <Text className="flex-1 text-lg dark:text-white max-w-[100]">
-                    Bean
-                  </Text>
-
-                  <TouchableOpacity
-                    className="flex-row items-center justify-between flex-1 h-10 px-2"
-                    hitSlop={20}
-                    onPress={() => {
-                      setIsBeansVisible(true);
-                      selectionAsync();
+        <View className="flex-col space-y-10">
+          <View className="flex-col space-y-[25]">
+            <View className="space-y-5">
+              <Section label="Metrics">
+                <Card className="mt-2.5">
+                  <InputWithLabel
+                    // autoFocus
+                    suffix="gram"
+                    label="Dose"
+                    placeholder="18"
+                    inputAccessoryViewID="next"
+                    keyboardType="decimal-pad"
+                    value={values.dose}
+                    ref={doseInput}
+                    onChangeText={handleChange("dose")}
+                    onFocus={() => {
+                      setFocusedInput("dose");
                     }}
-                  >
-                    <Text
-                      className="w-[80%] text-lg -translate-x-2.5 text-gray-600 dark:text-gray-300"
-                      numberOfLines={1}
-                    >
-                      {selectedBean?.name || "Choose a bean"}
+                  />
+
+                  <Divider />
+
+                  <InputWithLabel
+                    suffix="gram"
+                    label="Yield"
+                    placeholder="36"
+                    keyboardType="decimal-pad"
+                    value={values.yieldAmount}
+                    ref={yieldAmountInput}
+                    onChangeText={handleChange("yieldAmount")}
+                    inputAccessoryViewID="next"
+                    onFocus={() => {
+                      setFocusedInput("yieldAmount");
+                    }}
+                  />
+
+                  <Divider />
+
+                  <InputWithLabel
+                    suffix="sec"
+                    label="Duration"
+                    placeholder="30"
+                    keyboardType="number-pad"
+                    value={values.duration}
+                    ref={durationInput}
+                    onChangeText={handleChange("duration")}
+                    inputAccessoryViewID="next"
+                    onFocus={() => {
+                      setFocusedInput("duration");
+                    }}
+                  />
+
+                  <Divider />
+
+                  <InputWithLabel
+                    label="Grind"
+                    placeholder="5"
+                    keyboardType="decimal-pad"
+                    value={values.grindSetting}
+                    ref={grindSettingInput}
+                    onChangeText={handleChange("grindSetting")}
+                    onFocus={() => {
+                      setFocusedInput("grindSetting");
+                    }}
+                  />
+                </Card>
+              </Section>
+
+              <Card>
+                <Card.Content className="p-2.5 pl-4">
+                  <View className="flex-row items-center justify-between space-x-4">
+                    <Text className="text-lg text-gray-500 dark:text-gray-400 flex-1 max-w-[100px]">
+                      Bean
                     </Text>
 
-                    <ChevronDownIcon
-                      size={24}
-                      color={
-                        {
-                          light: colors.stone[400],
-                          dark: colors.stone[500],
-                        }[colorScheme]
-                      }
-                      className="translate-y-px"
-                    />
-                  </TouchableOpacity>
-                </View>
-              </Card.Content>
-            </Card>
+                    <TouchableOpacity
+                      className="flex-row items-center justify-between flex-1 h-10 px-2"
+                      hitSlop={20}
+                      onPress={() => {
+                        setIsBeansVisible(true);
+                        selectionAsync();
+                      }}
+                    >
+                      <Text
+                        className="w-[80%] text-lg -translate-x-2.5 text-gray-600 dark:text-gray-300"
+                        numberOfLines={1}
+                      >
+                        {selectedBean?.name || "Choose a bean"}
+                      </Text>
 
-            <Card>
-              <Input
-                label="Notes"
-                placeholder="I noticed that..."
-                value={values.notes}
-                style={{ height: 200 }}
-                multiline
-                ref={notesInput}
-                onChangeText={handleChange("notes")}
-                onFocus={() => {
-                  setFocusedInput("notes");
-                }}
-              />
-            </Card>
+                      <ChevronDownIcon
+                        size={24}
+                        color={
+                          {
+                            light: colors.stone[400],
+                            dark: colors.stone[500],
+                          }[colorScheme]
+                        }
+                        className="translate-y-px"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </Card.Content>
+              </Card>
+            </View>
+
+            <Section label="Flavour">
+              <Card className="mt-2.5">
+                <SliderWithLabel
+                  step={1}
+                  tapToSeek
+                  label="Strength"
+                  defaultValue={5}
+                  minimumValue={1}
+                  maximumValue={10}
+                  value={values.strength}
+                  onValueChange={(newStrength) => {
+                    setFieldValue("strength", newStrength);
+                  }}
+                />
+
+                <Divider />
+
+                <SliderWithLabel
+                  step={1}
+                  tapToSeek
+                  label="Acidity"
+                  defaultValue={5}
+                  minimumValue={1}
+                  maximumValue={10}
+                  value={values.acidity}
+                  onValueChange={(newAcidity) => {
+                    setFieldValue("acidity", newAcidity);
+                  }}
+                />
+              </Card>
+            </Section>
+
+            <Section label="Notes">
+              <Card className="mt-2.5">
+                <InputWithLabel
+                  placeholder="I noticed that..."
+                  value={values.notes}
+                  style={{ height: 200 }}
+                  multiline
+                  ref={notesInput}
+                  onChangeText={handleChange("notes")}
+                  onFocus={() => {
+                    setFocusedInput("notes");
+                  }}
+                />
+              </Card>
+            </Section>
           </View>
 
-          {/* <Card> */}
-          {/*   <Card.Content className="p-2.5 px-4"> */}
-          {/*     <View className="flex-row items-center justify-between space-x-4"> */}
-          {/*       <Text className="text-lg dark:text-white flex-1 max-w-[100px]"> */}
-          {/*         Sweetness */}
-          {/*       </Text> */}
-          {/**/}
-          {/*       <Slider */}
-          {/*         step={1} */}
-          {/*         style={{ flex: 1 }} */}
-          {/*         minimumValue={0} */}
-          {/*         maximumValue={10} */}
-          {/*         minimumTrackTintColor={colors.emerald[600]} */}
-          {/*         thumbTintColor={colors.emerald[600]} */}
-          {/*         tapToSeek */}
-          {/*       /> */}
-          {/*     </View> */}
-          {/*   </Card.Content> */}
-          {/* </Card> */}
           <Button
             icon={CheckIcon}
             loading={createShotLoading}
@@ -296,7 +329,7 @@ export default function NewShot() {
             <View />
           )}
 
-          <View className="flex-row items-center space-x-3">
+          <View className="flex-row items-center space-x-2.5">
             {focusedInput === "duration" ? (
               <>
                 {isRunning ? (
@@ -371,8 +404,8 @@ export default function NewShot() {
 
       <Modal
         animationType="slide"
-        presentationStyle="formSheet"
         visible={isBeansVisible}
+        presentationStyle="formSheet"
         onRequestClose={() => {
           setIsBeansVisible(false);
         }}
@@ -394,34 +427,71 @@ export default function NewShot() {
           className="flex-1 bg-white dark:bg-gray-900"
           contentContainerStyle={{ paddingBottom: 125 }}
         >
-          {beans?.map((bean, i) => (
-            <Fragment key={bean.id}>
-              <TouchableOpacity
-                onPress={async () => {
-                  selectionAsync();
-                  await setFieldValue("bean", bean.id);
-                  setIsBeansVisible(false);
-                }}
-                className="flex-row items-center justify-between px-5 py-4"
-              >
-                <Text className="text-lg dark:text-white">{bean.name}</Text>
+          {beans?.length ? (
+            beans.map((bean) => {
+              const isSelected = bean.id === values.beanId;
 
-                {bean.id === values.bean && (
-                  <CheckIcon
-                    size={22}
-                    color={
-                      {
-                        light: colors.emerald[700],
-                        dark: colors.emerald[500],
-                      }[colorScheme]
-                    }
+              return (
+                <Fragment key={bean.id}>
+                  <TouchableOpacity
+                    onPress={async () => {
+                      selectionAsync();
+                      await setFieldValue(
+                        "beanId",
+                        isSelected ? undefined : bean.id,
+                      );
+
+                      if (beans.length === 1) {
+                        setIsBeansVisible(false);
+                      } else if (beans.length > 1 && !isSelected) {
+                        setIsBeansVisible(false);
+                      }
+
+                      // if (!isSelected || beans.length === 1) {
+                      //   setIsBeansVisible(false);
+                      // }
+                    }}
+                    className="flex-row items-center justify-between px-5 py-4"
+                  >
+                    <Text className="text-lg dark:text-white">{bean.name}</Text>
+
+                    {isSelected && (
+                      <CheckIcon
+                        size={22}
+                        color={
+                          {
+                            light: colors.emerald[700],
+                            dark: colors.emerald[500],
+                          }[colorScheme]
+                        }
+                      />
+                    )}
+                  </TouchableOpacity>
+
+                  <Divider />
+                </Fragment>
+              );
+            })
+          ) : (
+            <View className="p-5">
+              <View className="items-center justify-center px-5 border-2 border-gray-200 border-dashed rounded-lg py-7">
+                <View className="items-center justify-center w-16 h-16 rounded-full bg-emerald-100">
+                  <BeanIcon
+                    size={30}
+                    color={{ light: colors.emerald[500] }[colorScheme]}
                   />
-                )}
-              </TouchableOpacity>
+                </View>
 
-              <Divider />
-            </Fragment>
-          ))}
+                <Text className="mt-4 text-xl font-semibold text-center text-gray-700">
+                  No beans
+                </Text>
+
+                <Text className="max-w-sm mt-2 text-base text-center text-gray-500">
+                  You don't seem to have{"\n "}added any beans yet.
+                </Text>
+              </View>
+            </View>
+          )}
         </ScrollView>
 
         <View
@@ -453,10 +523,10 @@ export default function NewShot() {
 
 interface InputProps extends TextInputProps {
   suffix?: string;
-  label: string;
+  label?: string;
 }
 
-const Input = forwardRef(
+const InputWithLabel = forwardRef(
   (
     { label, children, style, suffix, ...rest }: InputProps,
     ref: Ref<TextInput>,
@@ -465,17 +535,21 @@ const Input = forwardRef(
 
     return (
       <Card.Content
-        className={classNames(rest.multiline ? "p-4" : "p-2.5 pl-4")}
+        className={classNames(rest.multiline ? "p-0" : "p-2.5 pl-4")}
       >
         <View
-          className={classNames(
+          className={
             rest.multiline
-              ? "flex-col space-y-2.5"
-              : "flex-row items-center justify-between space-x-4",
-          )}
+              ? undefined
+              : "flex-row items-center justify-between space-x-4"
+          }
         >
           <View className="flex-row items-center justify-between flex-1 max-w-[100]">
-            <Text className="text-lg dark:text-white">{label}</Text>
+            {label && (
+              <Text className="text-lg text-gray-500 dark:text-gray-400">
+                {label}
+              </Text>
+            )}
 
             {children}
           </View>
@@ -484,8 +558,10 @@ const Input = forwardRef(
             {...rest}
             ref={ref}
             className={classNames(
-              "bg-gray-100 dark:bg-gray-800 dark:text-white rounded-lg",
-              rest.multiline ? "p-3 -mx-1.5 -mb-1.5" : "px-2 h-10 flex-1",
+              "dark:text-white",
+              rest.multiline
+                ? "pb-4 px-4 pt-3 leading-7"
+                : "bg-[#eeeeec] rounded-lg dark:bg-gray-800 px-2 h-10 flex-1",
             )}
             placeholderTextColor={
               { light: colors.stone[400], dark: colors.stone[600] }[colorScheme]
@@ -497,3 +573,99 @@ const Input = forwardRef(
     );
   },
 );
+
+interface SliderWithLabelProps extends SliderProps {
+  defaultValue: number;
+  label: string;
+}
+
+const SliderWithLabel = ({
+  onValueChange,
+  defaultValue,
+  value,
+  label,
+  ...rest
+}: SliderWithLabelProps) => {
+  const [labelTimeout, setLabelTimeout] = useState<NodeJS.Timeout>();
+  const [isSliding, setIsSliding] = useState<boolean>(false);
+
+  return (
+    <Card.Content className="p-2.5 px-4">
+      <View className="flex-row items-center justify-between space-x-4">
+        {isSliding && (
+          <Animated.Text
+            className="text-lg text-gray-500 dark:text-gray-400 flex-1 max-w-[100px]"
+            style={{ fontVariant: ["tabular-nums"] }}
+            entering={FadeInDown}
+            exiting={FadeOutDown}
+          >
+            {`${value}/10`}
+          </Animated.Text>
+        )}
+
+        {!isSliding && (
+          <Animated.Text
+            className="text-lg text-gray-500 dark:text-gray-400 flex-1 max-w-[100px]"
+            entering={FadeInUp}
+            exiting={FadeOutUp}
+          >
+            {label}
+          </Animated.Text>
+        )}
+
+        <Slider
+          {...rest}
+          value={defaultValue}
+          minimumTrackTintColor={colors.emerald[600]}
+          thumbTintColor={colors.white}
+          style={{ flex: 1 }}
+          onSlidingStart={() => {
+            clearTimeout(labelTimeout);
+
+            if (isSliding) {
+              setIsSliding(false);
+            }
+
+            setIsSliding(true);
+          }}
+          onSlidingComplete={() => {
+            const _ = setTimeout(() => {
+              setIsSliding(false);
+            }, 200);
+
+            setLabelTimeout(_);
+          }}
+          onValueChange={(newStrength) => {
+            onValueChange(newStrength);
+
+            if (newStrength < 3) {
+              selectionAsync();
+            } else if (newStrength < 6) {
+              impactAsync(ImpactFeedbackStyle.Light);
+            } else if (newStrength < 9) {
+              impactAsync(ImpactFeedbackStyle.Medium);
+            } else if (newStrength <= 10) {
+              impactAsync(ImpactFeedbackStyle.Heavy);
+            }
+          }}
+        />
+      </View>
+    </Card.Content>
+  );
+};
+
+interface SectionProps extends ViewProps {
+  label: string;
+}
+
+const Section = ({ label, children, ...rest }: SectionProps) => {
+  return (
+    <View {...rest}>
+      <Text className="pl-4 text-lg font-medium dark:text-gray-100">
+        {label}
+      </Text>
+
+      {children}
+    </View>
+  );
+};

@@ -14,7 +14,7 @@ import colors from "tailwindcss/colors";
 import classNames from "../lib/classNames";
 
 interface ButtonProps extends TouchableOpacityProps {
-  variant?: "default" | "secondary";
+  variant?: "default" | "secondary" | "danger";
   size?: "small" | "default";
   shape?: "square" | "pill";
   icon?: LucideIcon;
@@ -61,6 +61,7 @@ function Button(
         {
           default: "bg-emerald-700 dark:bg-emerald-700",
           secondary: "bg-gray-100 dark:bg-gray-700",
+          danger: "bg-rose-600 dark:bg-rose-600",
         }[variant],
         { square: "rounded-none", pill: "rounded-full" }[shape],
         { default: "px-6 py-4 space-x-2", small: "px-5 py-2.5 space-x-2" }[
@@ -76,6 +77,7 @@ function Button(
         className={classNames(
           "text-lg font-medium text-center",
           {
+            danger: "text-white",
             default: "text-white",
             secondary: "dark:text-white",
           }[variant],
@@ -89,6 +91,7 @@ function Button(
         <ActivityIndicator
           color={
             {
+              danger: "white",
               default: "white",
               secondary: { light: "black", dark: "white" }[colorScheme],
             }[variant]
@@ -99,6 +102,7 @@ function Button(
           size={{ default: 24, small: 20 }[size]}
           color={
             {
+              danger: "white",
               default: "white",
               secondary: { light: colors.stone[500], dark: colors.stone[300] }[
                 colorScheme

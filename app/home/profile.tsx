@@ -9,9 +9,9 @@ export default function Profile() {
   const { setToken } = useContext(AuthContext);
 
   return (
-    <Screen>
+    <Screen contentContainerStyle={{ paddingTop: 20 }}>
       <Button
-        variant="secondary"
+        variant="danger"
         icon={LogOutIcon}
         onPress={() => {
           setToken(undefined);

@@ -16,7 +16,7 @@ export default function HomeLayout() {
     headerTintColor: { light: "black", dark: "white" }[colorScheme],
     headerShadowVisible: false,
     headerStyle: {
-      backgroundColor: { light: colors.stone[100], dark: colors.stone[950] }[
+      backgroundColor: { light: "#eeeeec", dark: colors.stone[950] }[
         colorScheme
       ],
     },

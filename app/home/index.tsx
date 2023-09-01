@@ -56,7 +56,7 @@ export default function Home() {
       className="flex-1"
       style={{
         backgroundColor:
-          colorScheme === "light" ? colors.stone[100] : colors.stone[950],
+          colorScheme === "light" ? "#eeeeec" : colors.stone[950],
       }}
     >
       <Link href="/home/new-shot" asChild>
@@ -141,6 +141,20 @@ export default function Home() {
                         icon={BeanIcon}
                         label="Bean"
                         value={shot.bean?.name ?? "N/A"}
+                      />
+
+                      <ShotDataRow
+                        value={shot.strength ? `${shot.strength}/10` : "N/A"}
+                        style={{ fontVariant: ["tabular-nums"] }}
+                        label="Strength"
+                        icon={BeanIcon}
+                      />
+
+                      <ShotDataRow
+                        value={shot.acidity ? `${shot.acidity}/10` : "N/A"}
+                        style={{ fontVariant: ["tabular-nums"] }}
+                        icon={BeanIcon}
+                        label="Acidity"
                       />
                     </View>
                   </Card.Content>
