@@ -1,5 +1,6 @@
 import Slider, { SliderProps } from "@react-native-community/slider";
 import { impactAsync, ImpactFeedbackStyle, selectionAsync } from "expo-haptics";
+import { ImagePickerAsset } from "expo-image-picker";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFormik } from "formik";
@@ -53,12 +54,21 @@ interface FormValues {
   strength?: number;
   yieldAmount: string;
   grindSetting: string;
+  images: ImagePickerAsset[];
 }
 
 export default function NewShot() {
   const colorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+
+  // Utils
+  // const pickImage = usePickImage((images) => {
+  //   console.log({
+  //     images,
+  //   });
+  //   setFieldValue("images", images);
+  // });
 
   // Refs
   const doseInput = useRef<TextInput>(null);
@@ -104,6 +114,7 @@ export default function NewShot() {
         acidity: 5,
         notes: "",
         dose: "",
+        images: [],
       },
     });
 
@@ -115,6 +126,7 @@ export default function NewShot() {
       grindSetting: parseFloat(values.grindSetting.replaceAll(",", ".")),
       duration: parseFloat(values.duration.replaceAll(",", ".")),
       yield: parseFloat(values.yieldAmount.replaceAll(",", ".")),
+      images: values.images.map((image) => image.base64),
       dose: parseFloat(values.dose.replaceAll(",", ".")),
       strength: values.strength,
       acidity: values.acidity,
@@ -148,10 +160,99 @@ export default function NewShot() {
         <View className="flex-col space-y-10">
           <View className="flex-col space-y-[25]">
             <View className="space-y-5">
+              {/* <Section label="Photos"> */}
+              {/*   <Card> */}
+              {/*     <Card.Content className="!p-3"> */}
+              {/*       {values.images.length ? ( */}
+              {/*         <FlatList */}
+              {/*           horizontal */}
+              {/*           className="rounded-lg" */}
+              {/*           data={values.images} */}
+              {/*           decelerationRate={0} */}
+              {/*           snapToAlignment="start" */}
+              {/*           snapToInterval={208 + 12} */}
+              {/*           contentContainerStyle={{ gap: 12 }} */}
+              {/*           keyExtractor={(image) => image.uri} */}
+              {/*           renderItem={({ item: image }) => ( */}
+              {/*             <TouchableOpacity */}
+              {/*               className="relative w-52 h-52" */}
+              {/*               onPress={() => { */}
+              {/*                 selectionAsync(); */}
+              {/**/}
+              {/*                 ActionSheetIOS.showActionSheetWithOptions( */}
+              {/*                   { */}
+              {/*                     options: ["Cancel", "Delete"], */}
+              {/*                     destructiveButtonIndex: 1, */}
+              {/*                     cancelButtonIndex: 0, */}
+              {/*                   }, */}
+              {/*                   (buttonIndex) => { */}
+              {/*                     if (buttonIndex === 1) { */}
+              {/*                       setFieldValue( */}
+              {/*                         "images", */}
+              {/*                         values.images.filter( */}
+              {/*                           ({ uri }) => uri !== image.uri, */}
+              {/*                         ), */}
+              {/*                       ); */}
+              {/*                     } */}
+              {/*                   }, */}
+              {/*                 ); */}
+              {/*               }} */}
+              {/*             > */}
+              {/*               <Image */}
+              {/*                 source={{ uri: image.uri }} */}
+              {/*                 className="w-full h-full rounded-lg" */}
+              {/*               /> */}
+              {/*             </TouchableOpacity> */}
+              {/*           )} */}
+              {/*         /> */}
+              {/*       ) : ( */}
+              {/*         <View className="items-center justify-center border-2 border-gray-200 dark:border-gray-700 border-dashed rounded-[10px] px-4 pt-8 pb-7"> */}
+              {/*           <ImageIcon size={32} color={colors.stone[400]} /> */}
+              {/**/}
+              {/*           <Text className="mt-3 text-xl font-medium text-center dark:text-white"> */}
+              {/*             Attach photos */}
+              {/*           </Text> */}
+              {/**/}
+              {/*           <Text className="mt-1 text-base text-center text-gray-500"> */}
+              {/*             Add some photos of your{"\n"}choice to your shot. */}
+              {/*           </Text> */}
+              {/**/}
+              {/*           <Button */}
+              {/*             size="small" */}
+              {/*             variant="secondary" */}
+              {/*             className="mt-5" */}
+              {/*             onPress={() => { */}
+              {/*               ActionSheetIOS.showActionSheetWithOptions( */}
+              {/*                 { */}
+              {/*                   options: [ */}
+              {/*                     "Cancel", */}
+              {/*                     "Choose from library", */}
+              {/*                     "Take a photo", */}
+              {/*                   ], */}
+              {/*                   cancelButtonIndex: 0, */}
+              {/*                 }, */}
+              {/*                 async (buttonIndex) => { */}
+              {/*                   if (buttonIndex === 1) { */}
+              {/*                     pickImage(); */}
+              {/*                   } else if (buttonIndex === 2) { */}
+              {/*                     pickImage(true); */}
+              {/*                   } */}
+              {/*                 }, */}
+              {/*               ); */}
+              {/*             }} */}
+              {/*           > */}
+              {/*             Add photos */}
+              {/*           </Button> */}
+              {/*         </View> */}
+              {/*       )} */}
+              {/*     </Card.Content> */}
+              {/*   </Card> */}
+              {/* </Section> */}
+
               <Section label="Metrics">
-                <Card className="mt-2.5">
+                <Card>
                   <InputWithLabel
-                    // autoFocus
+                    autoFocus
                     suffix="gram"
                     label="Dose"
                     placeholder="18"
@@ -252,7 +353,7 @@ export default function NewShot() {
             </View>
 
             <Section label="Flavour">
-              <Card className="mt-2.5">
+              <Card>
                 <SliderWithLabel
                   step={1}
                   tapToSeek
@@ -284,7 +385,7 @@ export default function NewShot() {
             </Section>
 
             <Section label="Notes">
-              <Card className="mt-2.5">
+              <Card>
                 <InputWithLabel
                   placeholder="I noticed that..."
                   value={values.notes}
@@ -460,8 +561,8 @@ export default function NewShot() {
                         size={22}
                         color={
                           {
-                            light: colors.emerald[700],
-                            dark: colors.emerald[500],
+                            light: colors.black,
+                            dark: colors.white,
                           }[colorScheme]
                         }
                       />
@@ -509,7 +610,7 @@ export default function NewShot() {
             icon={PlusIcon}
             onPress={handleCreateBean}
             loading={createBeanLoading}
-            className="shadow-xl shadow-emerald-700/60 dark:shadow-gray-950/50"
+            className="shadow-xl shadow-gray-700/60 dark:shadow-gray-950/50"
           >
             New bean
           </Button>
@@ -586,6 +687,9 @@ const SliderWithLabel = ({
   label,
   ...rest
 }: SliderWithLabelProps) => {
+  const colorScheme = useColorScheme();
+
+  // Local state
   const [labelTimeout, setLabelTimeout] = useState<NodeJS.Timeout>();
   const [isSliding, setIsSliding] = useState<boolean>(false);
 
@@ -594,7 +698,7 @@ const SliderWithLabel = ({
       <View className="flex-row items-center justify-between space-x-4">
         {isSliding && (
           <Animated.Text
-            className="text-lg text-gray-500 dark:text-gray-400 flex-1 max-w-[100px]"
+            className="text-lg dark:text-white flex-1 max-w-[100px]"
             style={{ fontVariant: ["tabular-nums"] }}
             entering={FadeInDown}
             exiting={FadeOutDown}
@@ -616,7 +720,9 @@ const SliderWithLabel = ({
         <Slider
           {...rest}
           value={defaultValue}
-          minimumTrackTintColor={colors.emerald[600]}
+          minimumTrackTintColor={
+            { light: colors.black, dark: colors.white }[colorScheme]
+          }
           thumbTintColor={colors.white}
           style={{ flex: 1 }}
           onSlidingStart={() => {
@@ -661,7 +767,7 @@ interface SectionProps extends ViewProps {
 const Section = ({ label, children, ...rest }: SectionProps) => {
   return (
     <View {...rest}>
-      <Text className="pl-4 text-lg font-medium dark:text-gray-100">
+      <Text className="pl-4 text-lg font-medium dark:text-gray-100 mb-2.5">
         {label}
       </Text>
 

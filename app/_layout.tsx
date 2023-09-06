@@ -16,6 +16,9 @@ export default function () {
           queries: {
             retry: 1,
           },
+          mutations: {
+            retry: 1,
+          },
         },
       }),
   );

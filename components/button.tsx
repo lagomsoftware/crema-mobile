@@ -59,7 +59,7 @@ function Button(
       className={classNames(
         "flex-row items-center justify-between",
         {
-          default: "bg-emerald-700 dark:bg-emerald-700",
+          default: "bg-black dark:bg-white",
           secondary: "bg-gray-100 dark:bg-gray-700",
           danger: "bg-rose-600 dark:bg-rose-600",
         }[variant],
@@ -78,7 +78,7 @@ function Button(
           "text-lg font-medium text-center",
           {
             danger: "text-white",
-            default: "text-white",
+            default: "text-white dark:text-black",
             secondary: "dark:text-white",
           }[variant],
           { default: "text-lg", small: "text-base" }[size],
@@ -92,7 +92,7 @@ function Button(
           color={
             {
               danger: "white",
-              default: "white",
+              default: { light: "white", dark: "black" }[colorScheme],
               secondary: { light: "black", dark: "white" }[colorScheme],
             }[variant]
           }
@@ -103,7 +103,7 @@ function Button(
           color={
             {
               danger: "white",
-              default: "white",
+              default: { light: "white", dark: "black" }[colorScheme],
               secondary: { light: colors.stone[500], dark: colors.stone[300] }[
                 colorScheme
               ],

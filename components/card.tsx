@@ -6,7 +6,10 @@ interface CardProps extends ViewProps {
 
 function Card({ children, divider, ...rest }: CardProps) {
   return (
-    <View {...rest} className="bg-white dark:bg-gray-900 rounded-[10px]">
+    <View
+      {...rest}
+      className="bg-white dark:bg-gray-900 rounded-[10px] shadow-md"
+    >
       {children}
     </View>
   );
