@@ -88,7 +88,7 @@ export default function NewShot() {
   // Server state
   const { data: beans, refetch: refetchBeans } = trpc.bean.list.useQuery();
 
-  const { isLoading: createShotLoading, mutate: createShot } =
+  const { isLoading: isCreateShotLoading, mutate: createShot } =
     trpc.shot.create.useMutation({
       onError: () => Alert.alert("Failed to add new shot"),
       onSuccess: () => {
@@ -97,7 +97,7 @@ export default function NewShot() {
       },
     });
 
-  const { isLoading: createBeanLoading, mutate: createBean } =
+  const { isLoading: isCreateBeanLoading, mutate: createBean } =
     trpc.bean.create.useMutation({
       onError: () => Alert.alert("Failed to add new bean"),
       onSuccess: () => refetchBeans(),
@@ -403,7 +403,7 @@ export default function NewShot() {
 
           <Button
             icon={CheckIcon}
-            loading={createShotLoading}
+            isLoading={isCreateShotLoading}
             onPress={() => {
               handleSubmit();
             }}
@@ -575,19 +575,23 @@ export default function NewShot() {
             })
           ) : (
             <View className="p-5">
-              <View className="items-center justify-center px-5 border-2 border-gray-200 border-dashed rounded-lg py-7">
-                <View className="items-center justify-center w-16 h-16 rounded-full bg-emerald-100">
+              <View className="items-center justify-center px-5 border-2 border-gray-200 border-dashed dark:border-gray-800 rounded-lg py-7">
+                <View className="items-center justify-center w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-950">
                   <BeanIcon
                     size={30}
-                    color={{ light: colors.emerald[500] }[colorScheme]}
+                    color={
+                      { light: colors.emerald[500], dark: colors.emerald[500] }[
+                        colorScheme
+                      ]
+                    }
                   />
                 </View>
 
-                <Text className="mt-4 text-xl font-semibold text-center text-gray-700">
+                <Text className="mt-4 text-xl font-semibold text-center text-gray-700 dark:text-white">
                   No beans
                 </Text>
 
-                <Text className="max-w-sm mt-2 text-base text-center text-gray-500">
+                <Text className="max-w-sm mt-2 text-base text-center text-gray-500 dark:text-gray-400">
                   You don't seem to have{"\n "}added any beans yet.
                 </Text>
               </View>
@@ -609,7 +613,7 @@ export default function NewShot() {
           <Button
             icon={PlusIcon}
             onPress={handleCreateBean}
-            loading={createBeanLoading}
+            isLoading={isCreateBeanLoading}
             className="shadow-xl shadow-gray-700/60 dark:shadow-gray-950/50"
           >
             New bean

@@ -18,7 +18,7 @@ interface ButtonProps extends TouchableOpacityProps {
   size?: "small" | "default";
   shape?: "square" | "pill";
   icon?: LucideIcon;
-  loading?: boolean;
+  isLoading?: boolean;
 }
 
 function Button(
@@ -27,8 +27,8 @@ function Button(
     size = "default",
     shape = "pill",
     icon: Icon,
+    isLoading,
     children,
-    loading,
     style,
     ...rest
   }: ButtonProps,
@@ -36,7 +36,7 @@ function Button(
 ) {
   const colorScheme = useColorScheme();
 
-  const disabled = rest.disabled || loading;
+  const disabled = rest.disabled || isLoading;
 
   return (
     <TouchableOpacity
@@ -87,7 +87,7 @@ function Button(
         {children}
       </Text>
 
-      {loading ? (
+      {isLoading ? (
         <ActivityIndicator
           color={
             {

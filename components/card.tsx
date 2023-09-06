@@ -8,7 +8,7 @@ function Card({ children, divider, ...rest }: CardProps) {
   return (
     <View
       {...rest}
-      className="bg-white dark:bg-gray-900 rounded-[10px] shadow-md"
+      className="bg-white dark:bg-gray-900 rounded-[10px] shadow-md shadow-gray-200 dark:shadow-none"
     >
       {children}
     </View>
