@@ -1,4 +1,3 @@
-import { Image } from "expo-image";
 import { Link } from "expo-router";
 import { Formik } from "formik";
 import { ArrowRight } from "lucide-react-native";
@@ -25,18 +24,18 @@ export default function Login() {
   const { setToken } = useContext(AuthContext);
 
   // Server state
-  const { mutateAsync } = trpc.auth.login.useMutation({
+  const { mutateAsync, isLoading } = trpc.auth.login.useMutation({
     onSuccess: (data) => {
       setToken(data.token);
     },
-    onError: (e) => {
-      Alert.alert(e.message);
+    onError: () => {
+      Alert.alert("Failed to log in");
     },
   });
 
   return (
     <KeyboardAvoidingView
-      className="flex-1 dark:bg-gray-900"
+      className="flex-1 dark:bg-gray-950"
       style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
@@ -50,15 +49,8 @@ export default function Login() {
             mutateAsync(values);
           }}
         >
-          {({ handleChange, handleSubmit, values, isSubmitting }) => (
+          {({ handleChange, handleSubmit, values }) => (
             <View className="p-5 pt-16">
-              <Image
-                className="h-14"
-                source={require("../../assets/icon.png")}
-                contentFit="contain"
-                contentPosition="left"
-              />
-
               <Text className="mt-8 text-4xl font-semibold dark:text-white">
                 Welcome to Crema
               </Text>
@@ -70,6 +62,8 @@ export default function Login() {
                   clearButtonMode="while-editing"
                   keyboardType="email-address"
                   autoCapitalize="none"
+                  autoComplete="email"
+                  autoCorrect={false}
                   value={values.email}
                   label="Email"
                 />
@@ -79,6 +73,9 @@ export default function Login() {
                   clearButtonMode="while-editing"
                   placeholder="••••••••••••••"
                   value={values.password}
+                  autoComplete="password"
+                  autoCapitalize="none"
+                  autoCorrect={false}
                   label="Password"
                   className="mt-7"
                   secureTextEntry
@@ -88,7 +85,7 @@ export default function Login() {
               <Text className="mt-8 text-base dark:text-white">
                 Don't have a profile yet?{" "}
                 <Link
-                  href="/signup"
+                  href="/auth/signup"
                   className="text-indigo-400 dark:text-indigo-300"
                 >
                   Sign up here
@@ -97,7 +94,7 @@ export default function Login() {
 
               <Button
                 onPress={() => handleSubmit()}
-                loading={isSubmitting}
+                isLoading={isLoading}
                 className="mt-10"
                 icon={ArrowRight}
               >

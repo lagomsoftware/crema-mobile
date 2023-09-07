@@ -13,7 +13,16 @@
     },
     "name": "Crema",
     "slug": "crema",
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera"
+        }
+      ]
+    ],
     "userInterfaceStyle": "automatic",
     "orientation": "portrait"
   }

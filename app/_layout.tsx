@@ -16,6 +16,9 @@ export default function () {
           queries: {
             retry: 1,
           },
+          mutations: {
+            retry: 1,
+          },
         },
       }),
   );
@@ -33,7 +36,11 @@ export default function () {
         <AuthProvider>
           <Stack>
             <Stack.Screen name="auth/login" options={{ headerShown: false }} />
-            <Stack.Screen name="home" options={{ headerShown: false }} />
+            <Stack.Screen name="auth/signup" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="home"
+              options={{ headerShown: false, gestureEnabled: false }}
+            />
           </Stack>
         </AuthProvider>
       </QueryClientProvider>

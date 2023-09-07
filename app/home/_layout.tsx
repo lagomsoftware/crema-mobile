@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import {
-  BeanIcon,
+  MessageSquareIcon,
   PlusSquareIcon,
   TableProperties,
   UserIcon,
@@ -27,13 +27,10 @@ export default function HomeLayout() {
       screenOptions={{
         tabBarStyle: {
           backgroundColor: {
-            light: colors.white,
-            dark: colors.stone[800],
+            dark: colors.stone[950],
+            light: "#eeeeec",
           }[colorScheme],
-          borderTopColor: {
-            light: colors.stone[400],
-            dark: colors.stone[500],
-          }[colorScheme],
+          borderTopWidth: 0,
           paddingTop: 5,
           height: 85,
         },
@@ -66,11 +63,11 @@ export default function HomeLayout() {
       />
 
       <Tabs.Screen
-        name="beans"
+        name="feedback"
         options={{
-          title: "Beans",
+          title: "Feedback",
           ...largeHeader,
-          tabBarIcon: (props) => <BeanIcon {...props} />,
+          tabBarIcon: (props) => <MessageSquareIcon {...props} />,
         }}
       />
 
