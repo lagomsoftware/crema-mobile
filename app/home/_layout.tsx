@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import {
-  MessageSquareIcon,
+  BeanIcon,
   PlusSquareIcon,
   TableProperties,
   UserIcon,
@@ -64,11 +64,11 @@ export default function HomeLayout() {
       />
 
       <Tabs.Screen
-        name="feedback"
+        name="beans"
         options={{
-          title: "Feedback",
+          title: "Beans",
           ...largeHeader,
-          tabBarIcon: (props) => <MessageSquareIcon {...props} />,
+          tabBarIcon: (props) => <BeanIcon {...props} />,
         }}
       />
 

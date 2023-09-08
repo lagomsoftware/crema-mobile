@@ -37,8 +37,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    if (!token && rootSegment !== "auth") {
-      router.replace("/auth/login");
+    if (!token && rootSegment !== "(auth)") {
+      router.replace("/");
     } else if (token && rootSegment !== "home") {
       router.replace("/home");
     }

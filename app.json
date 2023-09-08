@@ -11,9 +11,9 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.albingroen.crema"
     },
-    "name": "Crema",
+    "name": "Crema for iOS",
     "slug": "crema-ios",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "plugins": [
       "expo-router",
       [
@@ -31,7 +31,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "4ebde7d7-8737-4b4b-9b05-1c3d7d1df69a"
+        "projectId": "4ea7858e-c7cc-4da6-9aad-cf9b4e40e053"
       }
     },
     "icon": "./assets/icon.png",

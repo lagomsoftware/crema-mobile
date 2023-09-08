@@ -106,10 +106,7 @@ export default function Signup() {
 
               <Text className="mt-8 text-base dark:text-white">
                 Already have a profile?{" "}
-                <Link
-                  href="/auth/login"
-                  className="text-indigo-400 dark:text-indigo-300"
-                >
+                <Link href="/" className="text-indigo-400 dark:text-indigo-300">
                   Log in here
                 </Link>
               </Text>

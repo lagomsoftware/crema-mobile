@@ -35,8 +35,14 @@ export default function () {
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <Stack>
-            <Stack.Screen name="auth/login" options={{ headerShown: false }} />
-            <Stack.Screen name="auth/signup" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="(auth)/index"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="(auth)/signup"
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="home"
               options={{ headerShown: false, gestureEnabled: false }}

@@ -85,7 +85,7 @@ export default function Login() {
               <Text className="mt-8 text-base dark:text-white">
                 Don't have a profile yet?{" "}
                 <Link
-                  href="/auth/signup"
+                  href="/signup"
                   className="text-indigo-400 dark:text-indigo-300"
                 >
                   Sign up here
