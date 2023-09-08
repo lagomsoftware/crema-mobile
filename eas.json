@@ -1,6 +1,7 @@
 {
   "cli": {
-    "version": ">= 5.2.0"
+    "version": ">= 5.2.0",
+    "promptToConfigurePushNotifications": false
   },
   "build": {
     "development": {
@@ -10,7 +11,14 @@
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {},
+    "development-simulator": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      }
+    }
   },
   "submit": {
     "production": {}
