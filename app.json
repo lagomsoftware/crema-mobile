@@ -12,7 +12,8 @@
       "bundleIdentifier": "com.albingroen.crema"
     },
     "name": "Crema",
-    "slug": "crema",
+    "slug": "crema-ios",
+    "version": "0.0.1",
     "plugins": [
       "expo-router",
       [
@@ -24,6 +25,18 @@
       ]
     ],
     "userInterfaceStyle": "automatic",
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "4ebde7d7-8737-4b4b-9b05-1c3d7d1df69a"
+      }
+    },
+    "icon": "./assets/icon.png",
+    "splash": {
+      "backgroundColor": "#eeeeec"
+    }
   }
 }
