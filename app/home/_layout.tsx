@@ -33,6 +33,7 @@ export default function HomeLayout() {
           borderTopWidth: 0,
           paddingTop: 5,
           height: 85,
+          paddingHorizontal: 20,
         },
         tabBarActiveTintColor: { light: colors.black, dark: colors.white }[
           colorScheme
@@ -41,7 +42,7 @@ export default function HomeLayout() {
           light: colors.stone[500],
           dark: colors.stone[400],
         }[colorScheme],
-        // tabBarShowLabel: false,
+        tabBarShowLabel: false,
       }}
     >
       <Tabs.Screen
