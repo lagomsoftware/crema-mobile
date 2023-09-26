@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-import Screen from "../../components/screen";
+import Screen from "../components/screen";
 
 export default function Beans() {
   return (

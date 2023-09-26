@@ -1,4 +1,3 @@
-import { useRouter, useSegments } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
@@ -17,8 +16,6 @@ const AuthContext = createContext<{
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string>();
   const [loading, setLoading] = useState<boolean>(true);
-  const rootSegment = useSegments()[0];
-  const router = useRouter();
 
   useEffect(() => {
     (async () => {
@@ -31,18 +28,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     })();
   }, []);
-
-  useEffect(() => {
-    if (loading) {
-      return;
-    }
-
-    if (!token && rootSegment !== "(auth)") {
-      router.replace("/");
-    } else if (token && rootSegment !== "home") {
-      router.replace("/home");
-    }
-  }, [token, loading, rootSegment]);
 
   return (
     <AuthContext.Provider

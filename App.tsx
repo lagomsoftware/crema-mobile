@@ -1,14 +1,14 @@
-import "../global.css";
+import Navigation from "./components/navigation";
+import { AuthProvider } from "./lib/context/auth";
+import { NavigationContainer } from "@react-navigation/native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { trpc, trpcClient } from "./lib/trpc";
 import { useColorScheme as _useColorScheme } from "nativewind";
-import { useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
+import { useState, useEffect } from "react";
 
-import { AuthProvider } from "../lib/context/auth";
-import { trpc, trpcClient } from "../lib/trpc";
-
-export default function () {
+export default function App() {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -34,20 +34,10 @@ export default function () {
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <Stack>
-            <Stack.Screen
-              name="(auth)/index"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="(auth)/signup"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="home"
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
-          </Stack>
+          <NavigationContainer>
+            <Navigation />
+            <StatusBar style="auto" />
+          </NavigationContainer>
         </AuthProvider>
       </QueryClientProvider>
     </trpc.Provider>
