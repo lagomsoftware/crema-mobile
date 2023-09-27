@@ -162,7 +162,7 @@ export default function NewShot() {
 
   return (
     <>
-      <Screen>
+      <Screen keyboardDismissMode="none">
         <View className="flex-col space-y-10">
           <View className="flex-col space-y-[25]">
             <View className="space-y-5">
@@ -509,6 +509,8 @@ export default function NewShot() {
         </View>
       </InputAccessoryView>
 
+      <StatusBar style="light" />
+
       <Modal
         animationType="slide"
         visible={isBeansVisible}
@@ -625,8 +627,6 @@ export default function NewShot() {
             New bean
           </Button>
         </View>
-
-        <StatusBar style="light" />
       </Modal>
     </>
   );
