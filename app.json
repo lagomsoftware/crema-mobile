@@ -3,7 +3,9 @@
     "assetBundlePatterns": ["**/*"],
     "icon": "./assets/icon.png",
     "ios": {
-      "config": { "usesNonExemptEncryption": false },
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "supportsTablet": false,
       "bundleIdentifier": "com.albingroen.crema"
     },
@@ -19,9 +21,18 @@
       ]
     ],
     "slug": "crema-ios",
-    "splash": { "backgroundColor": "#eeeeec" },
+    "splash": {
+      "backgroundColor": "#eeeeec"
+    },
     "userInterfaceStyle": "automatic",
-    "version": "0.0.4",
-    "web": { "favicon": "./assets/favicon.png" }
+    "version": "0.0.5",
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4ea7858e-c7cc-4da6-9aad-cf9b4e40e053"
+      }
+    }
   }
 }
