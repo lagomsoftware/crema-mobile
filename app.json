@@ -25,7 +25,7 @@
       "backgroundColor": "#eeeeec"
     },
     "userInterfaceStyle": "automatic",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "web": {
       "favicon": "./assets/favicon.png"
     },

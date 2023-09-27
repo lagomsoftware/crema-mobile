@@ -6,6 +6,7 @@ export type RootParamList = {
   Login: undefined;
   Signup: undefined;
   Authed: undefined;
+  NewShot: undefined;
 };
 
 export type AuthedParamList = {
@@ -20,11 +21,6 @@ export type HomeNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<RootParamList>
 >;
 
-export type NewShotNavigationProp = CompositeNavigationProp<
-  BottomTabNavigationProp<AuthedParamList, "NewShot">,
-  NativeStackNavigationProp<RootParamList>
->;
-
 export type ProfileNavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<AuthedParamList, "Profile">,
   NativeStackNavigationProp<RootParamList>
@@ -33,6 +29,11 @@ export type ProfileNavigationProp = CompositeNavigationProp<
 export type BeansNavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<AuthedParamList, "Beans">,
   NativeStackNavigationProp<RootParamList>
+>;
+
+export type NewShotNavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<AuthedParamList>,
+  NativeStackNavigationProp<RootParamList, "NewShot">
 >;
 
 export type LoginNavigationProp = CompositeNavigationProp<
