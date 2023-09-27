@@ -1,7 +1,12 @@
 import Slider, { SliderProps } from "@react-native-community/slider";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import {
+  CompositeNavigationProp,
+  useNavigation,
+} from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { impactAsync, ImpactFeedbackStyle, selectionAsync } from "expo-haptics";
 import { ImagePickerAsset } from "expo-image-picker";
-import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFormik } from "formik";
 import {
@@ -37,13 +42,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useStopwatch } from "react-timer-hook";
 import colors from "tailwindcss/colors";
 
-import Button from "../../components/button";
-import Card from "../../components/card";
-import Divider from "../../components/divider";
-import Screen from "../../components/screen";
-import classNames from "../../lib/classNames";
-import { trpc } from "../../lib/trpc";
-import { formatTimer } from "../../lib/utils";
+import Button from "../components/button";
+import Card from "../components/card";
+import Divider from "../components/divider";
+import Screen from "../components/screen";
+import classNames from "../lib/classNames";
+import { trpc } from "../lib/trpc";
+import { formatTimer } from "../lib/utils";
+import { NewShotNavigationProp } from "../types/navigation";
 
 interface FormValues {
   dose: string;
@@ -60,7 +66,7 @@ interface FormValues {
 export default function NewShot() {
   const colorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
-  const router = useRouter();
+  const navigation = useNavigation<NewShotNavigationProp>();
 
   // Utils
   // const pickImage = usePickImage((images) => {
@@ -93,7 +99,7 @@ export default function NewShot() {
       onError: () => Alert.alert("Failed to add new shot"),
       onSuccess: () => {
         resetForm();
-        router.replace("/home");
+        navigation.navigate("Home");
       },
     });
 

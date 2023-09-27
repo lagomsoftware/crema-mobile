@@ -5,7 +5,7 @@
 - typescript
 - react-native
 - expo
-- expo-router
+- @react-navigation/native
 - trpc
 
 ## Contributing

@@ -1,21 +1,15 @@
 {
   "expo": {
-    "scheme": "crema",
-    "web": {
-      "bundler": "metro"
-    },
+    "assetBundlePatterns": ["**/*"],
+    "icon": "./assets/icon.png",
     "ios": {
-      "config": {
-        "usesNonExemptEncryption": false
-      },
+      "config": { "usesNonExemptEncryption": false },
       "supportsTablet": false,
       "bundleIdentifier": "com.albingroen.crema"
     },
     "name": "Crema for iOS",
-    "slug": "crema-ios",
-    "version": "0.0.3",
+    "orientation": "portrait",
     "plugins": [
-      "expo-router",
       [
         "expo-image-picker",
         {
@@ -24,19 +18,10 @@
         }
       ]
     ],
+    "slug": "crema-ios",
+    "splash": { "backgroundColor": "#eeeeec" },
     "userInterfaceStyle": "automatic",
-    "orientation": "portrait",
-    "extra": {
-      "router": {
-        "origin": false
-      },
-      "eas": {
-        "projectId": "4ea7858e-c7cc-4da6-9aad-cf9b4e40e053"
-      }
-    },
-    "icon": "./assets/icon.png",
-    "splash": {
-      "backgroundColor": "#eeeeec"
-    }
+    "version": "0.0.4",
+    "web": { "favicon": "./assets/favicon.png" }
   }
 }
