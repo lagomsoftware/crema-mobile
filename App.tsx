@@ -37,6 +37,7 @@ export default function App() {
         <AuthProvider>
           <NavigationContainer>
             <Navigation />
+
             <StatusBar style="auto" />
           </NavigationContainer>
         </AuthProvider>

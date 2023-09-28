@@ -1,10 +1,5 @@
 import Slider, { SliderProps } from "@react-native-community/slider";
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import {
-  CompositeNavigationProp,
-  useNavigation,
-} from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
 import { impactAsync, ImpactFeedbackStyle, selectionAsync } from "expo-haptics";
 import { ImagePickerAsset } from "expo-image-picker";
 import { StatusBar } from "expo-status-bar";
@@ -259,7 +254,7 @@ export default function NewShot() {
                 <Card>
                   <InputWithLabel
                     autoFocus
-                    suffix="gram"
+                    suffix="grams"
                     label="Dose"
                     placeholder="18"
                     inputAccessoryViewID="next"
@@ -275,7 +270,7 @@ export default function NewShot() {
                   <Divider />
 
                   <InputWithLabel
-                    suffix="gram"
+                    suffix="grams"
                     label="Yield"
                     placeholder="36"
                     keyboardType="decimal-pad"
@@ -291,7 +286,7 @@ export default function NewShot() {
                   <Divider />
 
                   <InputWithLabel
-                    suffix="sec"
+                    suffix="seconds"
                     label="Duration"
                     placeholder="30"
                     keyboardType="number-pad"
@@ -652,7 +647,7 @@ const InputWithLabel = forwardRef(
           className={
             rest.multiline
               ? undefined
-              : "flex-row items-center justify-between space-x-4"
+              : "relative flex-row items-center justify-between space-x-4"
           }
         >
           <View className="flex-row items-center justify-between flex-1 max-w-[100]">
@@ -679,6 +674,15 @@ const InputWithLabel = forwardRef(
             }
             style={{ fontSize: 18, ...style }}
           />
+
+          {suffix && (
+            <Text
+              className="absolute right-3 text-lg text-gray-400 dark:text-gray-500"
+              style={{ pointerEvents: "none" }}
+            >
+              {suffix}
+            </Text>
+          )}
         </View>
       </Card.Content>
     );

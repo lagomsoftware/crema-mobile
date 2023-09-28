@@ -1,10 +1,17 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { TableProperties, BeanIcon, UserIcon } from "lucide-react-native";
+import {
+  TableProperties,
+  BeanIcon,
+  UserIcon,
+  XIcon,
+} from "lucide-react-native";
 import { useContext } from "react";
 import { ColorSchemeName, useColorScheme } from "react-native";
 import colors from "tailwindcss/colors";
 
+import IconButton from "./icon-button";
 import AuthContext from "../lib/context/auth";
 import Beans from "../screens/beans";
 import Home from "../screens/home";
@@ -85,6 +92,7 @@ function AuthedNavigation() {
 export default function Navigation() {
   const { token } = useContext(AuthContext);
   const colorScheme = useColorScheme();
+  const navigation = useNavigation();
 
   return (
     <Stack.Navigator>
@@ -101,6 +109,15 @@ export default function Navigation() {
             options={{
               title: "New shot",
               presentation: "modal",
+              headerRight: navigation.canGoBack()
+                ? () => (
+                    <IconButton
+                      hitSlop={20}
+                      icon={XIcon}
+                      onPress={navigation.goBack}
+                    />
+                  )
+                : undefined,
               ...transparentHeader(colorScheme),
             }}
           />
