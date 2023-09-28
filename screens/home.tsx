@@ -11,6 +11,7 @@ import {
 } from "lucide-react-native";
 import {
   ActivityIndicator,
+  Alert,
   Dimensions,
   FlatList,
   Text,
@@ -27,6 +28,7 @@ import ShotDataRow from "../components/shot-data-row";
 import { trpc } from "../lib/trpc";
 import { useRefetchOnFocus } from "../lib/utils";
 import { HomeNavigationProp } from "../types/navigation";
+import { ImpactFeedbackStyle, impactAsync } from "expo-haptics";
 
 const { width } = Dimensions.get("window");
 
@@ -71,6 +73,10 @@ export default function Home() {
               })}
               renderItem={({ item: shot, index: i }) => (
                 <TouchableOpacity
+                  onPress={() => {
+                    impactAsync(ImpactFeedbackStyle.Light);
+                    Alert.alert("Coming soon");
+                  }}
                   style={{
                     width: SHOT_WIDTH,
                     marginLeft: i === 0 ? HALF_SHOT_GAP : 0,

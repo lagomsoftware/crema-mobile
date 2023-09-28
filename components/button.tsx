@@ -47,7 +47,7 @@ function Button(
         impactAsync(
           {
             small: ImpactFeedbackStyle.Light,
-            default: ImpactFeedbackStyle.Medium,
+            default: ImpactFeedbackStyle.Heavy,
           }[size],
         );
 
