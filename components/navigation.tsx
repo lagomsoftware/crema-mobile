@@ -7,8 +7,9 @@ import {
   UserIcon,
   XIcon,
 } from "lucide-react-native";
+import { useColorScheme } from "nativewind";
 import { useContext } from "react";
-import { ColorSchemeName, useColorScheme } from "react-native";
+import { ColorSchemeName } from "react-native";
 import colors from "tailwindcss/colors";
 
 import IconButton from "./icon-button";
@@ -33,7 +34,7 @@ const transparentHeader = (colorScheme: ColorSchemeName) => ({
 });
 
 function AuthedNavigation() {
-  const colorScheme = useColorScheme();
+  const { colorScheme } = useColorScheme();
 
   return (
     <Tab.Navigator
@@ -91,7 +92,7 @@ function AuthedNavigation() {
 
 export default function Navigation() {
   const { token } = useContext(AuthContext);
-  const colorScheme = useColorScheme();
+  const { colorScheme } = useColorScheme();
   const navigation = useNavigation();
 
   return (

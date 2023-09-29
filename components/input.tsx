@@ -1,11 +1,6 @@
+import { useColorScheme } from "nativewind";
 import { forwardRef, Ref } from "react";
-import {
-  View,
-  TextInput,
-  TextInputProps,
-  Text,
-  useColorScheme,
-} from "react-native";
+import { View, TextInput, TextInputProps, Text } from "react-native";
 import colors from "tailwindcss/colors";
 
 import Label from "./label";
@@ -19,7 +14,7 @@ const Input = (
   { suffix, style, label, ...rest }: InputProps,
   ref: Ref<TextInput>,
 ) => {
-  const colorScheme = useColorScheme();
+  const { colorScheme } = useColorScheme();
 
   return (
     <View style={style}>

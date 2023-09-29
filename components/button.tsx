@@ -1,12 +1,12 @@
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 import { LucideIcon } from "lucide-react-native";
+import { useColorScheme } from "nativewind";
 import { forwardRef, Ref } from "react";
 import {
   ActivityIndicator,
   Text,
   TouchableOpacity,
   TouchableOpacityProps,
-  useColorScheme,
   View,
 } from "react-native";
 import colors from "tailwindcss/colors";
@@ -34,7 +34,7 @@ function Button(
   }: ButtonProps,
   ref: Ref<TouchableOpacity>,
 ) {
-  const colorScheme = useColorScheme();
+  const { colorScheme } = useColorScheme();
 
   const disabled = rest.disabled || isLoading;
 

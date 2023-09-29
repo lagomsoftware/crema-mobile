@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { format } from "date-fns";
+import { ImpactFeedbackStyle, impactAsync } from "expo-haptics";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -9,6 +10,8 @@ import {
   TablePropertiesIcon,
   TimerIcon,
 } from "lucide-react-native";
+import { useColorScheme } from "nativewind";
+import { useCallback } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -16,7 +19,6 @@ import {
   FlatList,
   Text,
   TouchableOpacity,
-  useColorScheme,
   View,
 } from "react-native";
 import colors from "tailwindcss/colors";
@@ -28,7 +30,6 @@ import ShotDataRow from "../components/shot-data-row";
 import { trpc } from "../lib/trpc";
 import { useRefetchOnFocus } from "../lib/utils";
 import { HomeNavigationProp } from "../types/navigation";
-import { ImpactFeedbackStyle, impactAsync } from "expo-haptics";
 
 const { width } = Dimensions.get("window");
 
@@ -39,7 +40,7 @@ const SHOT_GAP = 40;
 const HALF_SHOT_GAP = SHOT_GAP / 2;
 
 export default function Home() {
-  const colorScheme = useColorScheme();
+  const { colorScheme } = useColorScheme();
   const navigation = useNavigation<HomeNavigationProp>();
 
   // Server state
@@ -47,6 +48,101 @@ export default function Home() {
 
   // Side-effects
   useRefetchOnFocus(refetch);
+
+  // Helpers
+  const renderShot = useCallback(
+    ({ item: shot, index: i, ...rest }) => (
+      <TouchableOpacity
+        onPress={() => {
+          impactAsync(ImpactFeedbackStyle.Light);
+          Alert.alert("Coming soon");
+        }}
+        style={{
+          width: SHOT_WIDTH,
+          marginLeft: i === 0 ? HALF_SHOT_GAP : 0,
+          marginRight: HALF_SHOT_GAP,
+        }}
+      >
+        <Card>
+          <Card.Content>
+            <View className="flex-row justify-between align-baseline">
+              <Text className="text-2xl font-medium dark:text-white">
+                {format(new Date(shot.createdAt), "MMM dd")}
+              </Text>
+
+              <View className="flex-row items-center">
+                <Text className="text-base text-gray-500 dark:text-gray-500">
+                  Shot #{data?.length - i}
+                </Text>
+
+                <Text className="ml-2 mr-1.5 text-base text-gray-400 dark:text-gray-600">
+                  •
+                </Text>
+
+                <Text className="text-base text-gray-500 dark:text-gray-500">
+                  {format(new Date(shot.createdAt), "HH:mm")}
+                </Text>
+              </View>
+            </View>
+
+            <View className="mt-4 space-y-2.5">
+              <ShotDataRow
+                icon={ArrowRightIcon}
+                label="Dose"
+                value={shot.dose}
+                suffix="g"
+              />
+
+              <ShotDataRow
+                icon={ArrowLeftIcon}
+                label="Yield"
+                value={shot.yield}
+                suffix="g"
+              />
+
+              <ShotDataRow
+                icon={TimerIcon}
+                label="Extraction"
+                value={shot.duration}
+                suffix="s"
+              />
+
+              <ShotDataRow
+                icon={SettingsIcon}
+                label="Grind"
+                value={
+                  typeof shot.grindSetting === "number"
+                    ? shot.grindSetting
+                    : "N/A"
+                }
+              />
+
+              <ShotDataRow
+                icon={BeanIcon}
+                label="Bean"
+                value={shot.bean?.name ?? "N/A"}
+              />
+
+              <ShotDataRow
+                value={shot.strength ? `${shot.strength}/10` : "N/A"}
+                style={{ fontVariant: ["tabular-nums"] }}
+                label="Strength"
+                icon={BeanIcon}
+              />
+
+              <ShotDataRow
+                value={shot.acidity ? `${shot.acidity}/10` : "N/A"}
+                style={{ fontVariant: ["tabular-nums"] }}
+                icon={BeanIcon}
+                label="Acidity"
+              />
+            </View>
+          </Card.Content>
+        </Card>
+      </TouchableOpacity>
+    ),
+    [data],
+  );
 
   return (
     <Screen
@@ -63,7 +159,7 @@ export default function Home() {
               horizontal
               data={data}
               decelerationRate="fast"
-              initialNumToRender={3}
+              initialNumToRender={2}
               maxToRenderPerBatch={3}
               keyExtractor={(shot) => shot.id}
               showsHorizontalScrollIndicator={false}
@@ -71,96 +167,14 @@ export default function Home() {
               snapToOffsets={data.map((_, i) => {
                 return SHOT_WIDTH * i + HALF_SHOT_GAP * i;
               })}
-              renderItem={({ item: shot, index: i }) => (
-                <TouchableOpacity
-                  onPress={() => {
-                    impactAsync(ImpactFeedbackStyle.Light);
-                    Alert.alert("Coming soon");
-                  }}
-                  style={{
-                    width: SHOT_WIDTH,
-                    marginLeft: i === 0 ? HALF_SHOT_GAP : 0,
-                    marginRight: HALF_SHOT_GAP,
-                  }}
-                >
-                  <Card>
-                    <Card.Content>
-                      <View className="flex-row justify-between align-baseline">
-                        <Text className="text-2xl font-medium dark:text-white">
-                          {format(new Date(shot.createdAt), "MMM dd")}
-                        </Text>
-
-                        <View className="flex-row items-center">
-                          <Text className="text-base text-gray-500 dark:text-gray-500">
-                            Shot #{data?.length - i}
-                          </Text>
-
-                          <Text className="ml-2 mr-1.5 text-base text-gray-400 dark:text-gray-600">
-                            •
-                          </Text>
-
-                          <Text className="text-base text-gray-500 dark:text-gray-500">
-                            {format(new Date(shot.createdAt), "HH:mm")}
-                          </Text>
-                        </View>
-                      </View>
-
-                      <View className="mt-4 space-y-2.5">
-                        <ShotDataRow
-                          icon={ArrowRightIcon}
-                          label="Dose"
-                          value={shot.dose}
-                          suffix="g"
-                        />
-
-                        <ShotDataRow
-                          icon={ArrowLeftIcon}
-                          label="Yield"
-                          value={shot.yield}
-                          suffix="g"
-                        />
-
-                        <ShotDataRow
-                          icon={TimerIcon}
-                          label="Extraction"
-                          value={shot.duration}
-                          suffix="s"
-                        />
-
-                        <ShotDataRow
-                          icon={SettingsIcon}
-                          label="Grind"
-                          value={
-                            typeof shot.grindSetting === "number"
-                              ? shot.grindSetting
-                              : "N/A"
-                          }
-                        />
-
-                        <ShotDataRow
-                          icon={BeanIcon}
-                          label="Bean"
-                          value={shot.bean?.name ?? "N/A"}
-                        />
-
-                        <ShotDataRow
-                          value={shot.strength ? `${shot.strength}/10` : "N/A"}
-                          style={{ fontVariant: ["tabular-nums"] }}
-                          label="Strength"
-                          icon={BeanIcon}
-                        />
-
-                        <ShotDataRow
-                          value={shot.acidity ? `${shot.acidity}/10` : "N/A"}
-                          style={{ fontVariant: ["tabular-nums"] }}
-                          icon={BeanIcon}
-                          label="Acidity"
-                        />
-                      </View>
-                    </Card.Content>
-                  </Card>
-                </TouchableOpacity>
-              )}
+              renderItem={renderShot}
+              getItemLayout={(_, i) => {
+                return {
+                  index: i,
+                  length: SHOT_WIDTH,
+                  offset: SHOT_WIDTH * i,
+                };
+              }}
             />
           ) : (
             <View className="p-5">

@@ -9,7 +9,7 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.albingroen.crema"
     },
-    "name": "Crema for iOS",
+    "name": "Crema (Preview)",
     "orientation": "portrait",
     "plugins": [
       [
@@ -25,7 +25,7 @@
       "backgroundColor": "#eeeeec"
     },
     "userInterfaceStyle": "automatic",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "web": {
       "favicon": "./assets/favicon.png"
     },
