@@ -13,6 +13,7 @@ import {
   TimerOff,
   TimerReset,
 } from "lucide-react-native";
+import { useColorScheme } from "nativewind";
 import { forwardRef, Fragment, Ref, useRef, useState } from "react";
 import {
   Alert,
@@ -23,7 +24,6 @@ import {
   TextInput,
   TextInputProps,
   TouchableOpacity,
-  useColorScheme,
   View,
   ViewProps,
 } from "react-native";
@@ -59,7 +59,7 @@ interface FormValues {
 }
 
 export default function NewShot() {
-  const colorScheme = useColorScheme();
+  const { colorScheme } = useColorScheme();
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NewShotNavigationProp>();
 
@@ -637,7 +637,7 @@ const InputWithLabel = forwardRef(
     { label, children, style, suffix, ...rest }: InputProps,
     ref: Ref<TextInput>,
   ) => {
-    const colorScheme = useColorScheme();
+    const { colorScheme } = useColorScheme();
 
     return (
       <Card.Content
@@ -701,7 +701,7 @@ const SliderWithLabel = ({
   label,
   ...rest
 }: SliderWithLabelProps) => {
-  const colorScheme = useColorScheme();
+  const { colorScheme } = useColorScheme();
 
   // Local state
   const [labelTimeout, setLabelTimeout] = useState<NodeJS.Timeout>();

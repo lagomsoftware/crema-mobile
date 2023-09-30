@@ -1,10 +1,7 @@
 import { ImpactFeedbackStyle, impactAsync } from "expo-haptics";
 import { LucideIcon } from "lucide-react-native";
-import {
-  TouchableOpacity,
-  TouchableOpacityProps,
-  useColorScheme,
-} from "react-native";
+import { useColorScheme } from "nativewind";
+import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 import colors from "tailwindcss/colors";
 
 interface IconButtonProps extends TouchableOpacityProps {
@@ -12,7 +9,7 @@ interface IconButtonProps extends TouchableOpacityProps {
 }
 
 export default function IconButton({ icon: Icon, ...rest }: IconButtonProps) {
-  const colorScheme = useColorScheme();
+  const { colorScheme } = useColorScheme();
 
   return (
     <TouchableOpacity

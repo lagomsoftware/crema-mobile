@@ -1,10 +1,6 @@
+import { useColorScheme } from "nativewind";
 import { ReactNode, useState } from "react";
-import {
-  RefreshControl,
-  ScrollViewProps,
-  useColorScheme,
-  View,
-} from "react-native";
+import { RefreshControl, ScrollViewProps, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import colors from "tailwindcss/colors";
 
@@ -20,7 +16,7 @@ export default function Screen({
   ...rest
 }: ScreenProps) {
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const colorScheme = useColorScheme();
+  const { colorScheme } = useColorScheme();
 
   // Handlers
   async function handleRefresh() {
